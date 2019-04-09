@@ -1,0 +1,157 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">待处理事故</h3>
+            </div>
+            <div class="box-body">
+
+                <div id="toolbar-pendingCoordinationAccident" class="btn-group">
+                    <button id="refreshPendingAccident" type="button" class="btn btn-default toolbar-btn" onclick="refresh();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                </div>
+                <table id="table-pendingCoordinationAccident"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $("#table-pendingCoordinationAccident").bootstrapTable({ // 对应table标签的id
+        url: "/manage/listPendingCoordinationAccident", // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-pendingCoordinationAccident",
+        toolbarAlign: 'right',
+        striped: true,  //表格显示条纹，默认为false
+        singleSelect: true,//单选
+
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'seqNumber', // 返回json数据中的name
+                title: '序号', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    var num = ''+value;
+                    if (num.length < 2) {
+                        num = '0' + value;
+                    }
+                    return num;
+                }
+            }, {
+                field: 'time', // 返回json数据中的name
+                title: '申请时间', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    return format(value, "yyyy-MM-dd HH:mm:ss");
+                }
+            }, {
+                field: 'accidentParties', // 返回json数据中的name
+                title: '当事人', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'drivingNumber', // 返回json数据中的name
+                title: '当事车辆', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            },{
+                field:'sysPersonName',
+                title:'当前处理人',
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'conductCenter', // 返回json数据中的name
+                title: '快处中心', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+
+            }, {
+                field:'id',
+                title: '操作', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    var canable=$.cookie("userId")==row.sysPersonId||row.sysPersonId==""?"":"disabled='true'";
+                    var btn= '<button '+canable+'type="button" sysPersonId="'+row.sysPersonId+'"  conductCenterId="'+row.conductCenterId+'"  accidentid="'+value+'" class="btn btn-default toolbar-btn" onclick="pageopt(this,event);">\n' +
+                             '                        <span  aria-hidden="true">&nbsp;</span>'+ (row.processStatus==0?"等待认定":"正在处理") +'\n' +
+                             '                    </button>';
+                    return btn;
+                }
+            }
+
+        ],
+        responseHandler: function(res) {
+
+            return res.msg;
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refresh() {//刷新表
+        $("#table-pendingCoordinationAccident").bootstrapTable('refresh',{silent:true});
+    }
+
+    function pageopt(object,event) {//远程调解
+        event.stopPropagation();
+        var accidentid=$(object).attr('accidentid');
+        // 处理之前查询该事故是否被占用
+        $.ajax({
+            type: "PUT",
+            url:'/s/acccidentProcess/start'+accidentid,
+            success:function(data) {
+                if(data.result){
+                    //跳转处理端
+                    var row = $("#table-pendingCoordinationAccident").bootstrapTable('getSelections');
+                    /*RttaMaster参数
+                     r：房间号，从1开始
+                     a：事故id  conductCenterId
+                     -a 33 -1：后面这个-1是占位符，没意义，不要取消*/
+                    location = "RttaMaster://start -r "+$(object).attr('conductCenterId')+" -a "+accidentid+" -1";//-r 房间号 -a事故id
+                }else{
+                    alert(data.msg);
+                    refresh();
+                }
+            },
+            error:function() {
+                alert('获取事故信息失败');
+            }
+
+        });
+
+
+
+
+    }
+    setInterval(function() {
+        if ($('#refreshPendingAccident')[0]==undefined){
+            return false;
+        }
+        $('#refreshPendingAccident').click();
+        console.log('刷新');
+    },10000);
+
+
+</script>
+

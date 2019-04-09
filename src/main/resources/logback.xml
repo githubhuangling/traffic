@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 从高到地低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+<!-- 日志输出规则  根据当前ROOT 级别，日志输出时，级别高于root默认的级别时  会输出 -->
+<!-- 以下  每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志-->
+<configuration>
+    <!-- ConsoleAppender 控制台输出日志 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 对日志进行格式化 -->
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) [%cyan(%logger{36})] : %msg %n</Pattern>
+        </encoder>
+        <!--过滤器-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>TRACE</level>
+    </filter>
+    </appender>
+
+    <!-- ERROR级别日志 -->
+    <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender-->
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/error.log</file>
+        <!-- 过滤器，只记录ERROR级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <!--日志输出位置  可相对、和绝对路径、按天回滚 daily -->
+            <fileNamePattern>./logs/%d{yyyy-MM-dd}-error.%i.log</fileNamePattern>
+            <!--日志文件保留天数 -->
+            <maxHistory>30</maxHistory>
+            <!--日志文件最大的大小 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!--日志打印输出格式-->
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="common" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/common.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>./logs/%d{yyyy-MM-dd}-common.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="operate" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/operate.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>./logs/%d{yyyy-MM-dd}-operate.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="org.hibernate.SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>./logs/jdbc.sql.log</File>
+        <!--FixedWindowRollingPolicy 固定窗口的日志滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>./logs/jdbc.sql.%i.log</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>5</MaxIndex>
+        </rollingPolicy>
+        <!--TriggeringPolicy负责RollingFileAppender何时发生日志滚动-->
+        <!--SizeBasedTriggeringPolicy 检测当前活动日志文件的大小，当到达一定容量，就开启日志滚动。
+SizeBasedTriggeringPolicy只接收一个参数，maxFileSize，默认值：10MB
+可接受B，KB，MB，GB-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>5MB</MaxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.hibernate.SQL">
+        <appender-ref ref="org.hibernate.SQL"/>
+    </logger>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="INFO"/>
+
+    <root>
+        <appender-ref ref="common"/>
+        <appender-ref ref="error"/>
+        <appender-ref ref="console"/>
+    </root>
+
+    <appender name="customerController" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/customerController.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>./logs/%d{yyyy-MM-dd}-customerController.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.ctf.traffic.controller.customer.AccidentController" level="INFO">
+        <appender-ref ref="customerController"/>
+    </logger>
+</configuration>

@@ -1,0 +1,31 @@
+body{
+    background:url("../../image/customer/bg/bg_4.png") no-repeat;
+}
+.header{
+    margin-top:100px;
+    margin-left:100px;
+}
+.header img{
+    margin-right:20px;
+}
+.main-content{
+    margin: 163px auto 0;
+    text-align: center;
+    font-size: 64px;
+}
+.main-content h1{
+    font-weight: normal;
+}
+p.numeral{
+    font-size: 200px;
+    color: #3C69DE;
+    margin-bottom: 40px;
+    line-height: 100px;
+    margin-top: 40px;
+}
+p.count-down{
+    margin-top:10px;
+}
+.content-txt{
+    font-size:40px;
+}

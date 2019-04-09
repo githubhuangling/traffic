@@ -1,0 +1,267 @@
+<!-- Modal-->
+<div class="modal fade" id="reprocessModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">重新认定</h4>
+            </div>
+            <div class="modal-body">
+                该事故将移至'待处理事故',是否确定?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="toreprocessBtn"  onclick="reprocess(this)" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">已处理事故</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+                        <label class="col-xs-2 control-label" style="text-align: right; margin-top:5px">事故处理日期：</label>
+                        <div class="input-group date datepicker col-xs-3" style="float: left">
+                            <input type='text' class='form-control selectData' id='date' name='date'>
+                        </div>
+
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-default toolbar-btn"
+                                    onclick="refreshProcessedTable();">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">&nbsp;</span>查询
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--<div id="toolbar-processedCoordinationAccident" class="btn-group">-->
+                <!--<button id="refreshProcessedAccident" type="button" class="btn btn-default toolbar-btn"-->
+                <!--onclick="refresh();">-->
+                <!--<span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新-->
+                <!--</button>-->
+
+                <!--</div>-->
+                <table id="table-processedCoordinationAccident"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //设置默认当天时间
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+    $('#date').val(getNowFormatDate());
+
+    $("#table-processedCoordinationAccident").bootstrapTable({ // 对应table标签的id
+        url: "/manage/listMyPendedAccident", // 获取表格数据的url
+        method: 'get',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        singleSelect: true,//单选
+        //toolbar: "#toolbar-sysperson",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+
+            return {
+                date: $('#date').val(),
+                size: params.limit,//params.limit, // 每页要显示的数据条数
+                page: (params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'seqNumber', // 返回json数据中的name
+                title: '序号', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    var num = '' + value;
+                    if (num.length < 2) {
+                        num = '0' + value;
+                    }
+                    return num;
+                }
+            }, {
+                field: 'time', // 返回json数据中的name
+                title: '申请时间', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    return format(value, "yyyy-MM-dd HH:mm:ss");
+                }
+            }, {
+                field: 'accidentParties', // 返回json数据中的name
+                title: '当事人', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'drivingNumber', // 返回json数据中的name
+                title: '当事车辆', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                title: '状态', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                    if(row.processStatus==3){
+                        return "当事人不在现场"
+                    }
+                    if(row.processMode==2){
+                        return "线下处理"
+                    }
+                    return "已处理";
+                }
+            }, {
+                field: 'conductCenter', // 返回json数据中的name
+                title: '快处中心', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+
+            },{
+                title: '操作', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle', // 上下居中
+                formatter: function(value, row, index) {
+                                         //在线处理 ||  线下处理
+                    if (row.processMode==1||row.processMode==2){
+                        var btn= '<button accidentid="'+row.id+'" type="button"  onclick="showReprocessModal(this,event)"   class="btn btn-default toolbar-btn" >\n' +
+                                 '                        <span  aria-hidden="true">&nbsp;</span>重新认定 \n' +
+                                 '                    </button>';
+                        return btn;
+                    }
+                    return null;
+                }
+            }
+
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refreshProcessedTable() {//刷新表
+        $("#table-processedCoordinationAccident").bootstrapTable('refresh', {
+            silent: true,
+            query: {
+                date: $('#date').val()
+            }
+        });
+    }
+    
+    function showReprocessModal(object,event) {
+        var id=$(object).attr('accidentid');
+        $("#reprocessModal").modal('toggle');
+        $('#toreprocessBtn').attr("accidentid",id);
+        event.stopPropagation();
+    }
+    function reprocess(object) {
+	    	if(confirm("是否要重新认定？")){
+	            $.ajax({
+	                type: "PUT",
+	                url:'/s/acccidentProcess/reprocess'+$(object).attr("accidentId"),
+	                dataType: "json",
+	                success: function(data) {
+	                    if (data.result) {
+	                        alert(data.msg);
+	                        refreshProcessedTable();
+	                    }else{
+	                        alert(data.msg);
+	                    }
+	                }
+	            });
+	    	}
+    }
+
+</script>
+<script>
+    //日期选择器
+$.fn.datepicker.dates['cn'] = {   //切换为中文显示
+    days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+    daysShort: ["日", "一", "二", "三", "四", "五", "六", "七"],
+    daysMin: ["日", "一", "二", "三", "四", "五", "六", "七"],
+    months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    today: "今天",
+    clear: "清除"
+};
+
+$('.selectData').datepicker({
+    autoclose: true, //自动关闭
+    beforeShowDay: $.noop,    //在显示日期之前调用的函数
+    calendarWeeks: false,     //是否显示今年是第几周
+    clearBtn: false,          //显示清除按钮
+    daysOfWeekDisabled: [],   //星期几不可选
+    endDate: Infinity,        //日历结束日期
+    forceParse: true,         //是否强制转换不符合格式的字符串
+    format: 'yyyy-mm-dd',     //日期格式
+    keyboardNavigation: true, //是否显示箭头导航
+    language: 'cn',           //语言
+    minViewMode: 0,
+    orientation: "auto",      //方向
+    rtl: false,
+    startDate: -Infinity,     //日历开始日期
+    startView: 0,             //开始显示
+    todayBtn: false,          //今天按钮
+    todayHighlight: false,    //今天高亮
+    weekStart: 0              //星期几是开始
+});
+
+
+
+
+</script>
+
+

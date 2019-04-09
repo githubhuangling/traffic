@@ -1,0 +1,559 @@
+<div class="row">
+    <div class="col-xs-2">
+        <div class="box">
+            <div class="box-body">
+                <div class="box-header with-border" style="text-align: center;">
+                    <h3 class="box-title">交通分局</h3>
+
+
+                    <div class="box-tools btn-group">
+                        <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-list-ul"></i>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" id="ul-cates-menu">
+                            <li data-toggle="modal" data-target="#modal-cate" onclick="loadCateAdd();"><a href="#"><i class="fa fa-plus" ></i>新建</a></li>
+                            <li   onclick="loadCateUpdate();"><a href="#"><i class="fa fa-pencil" ></i>修改</a></li>
+                            <li  onclick="deleteCate();"><a href="#"><i class="fa fa-close"></i>删除</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked" id="ul-cates">
+                        <!--<li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>
+                        <li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>
+                        <li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">管辖区域</h3>
+            </div>
+            <div class="box-body">
+                <!--<div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                        <label class="col-xs-1 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                        <div class="col-xs-4">
+                            <input id="center-search" class="form-control" oninput="searchByCategoryId();"></input>
+                        </div>
+
+
+                    </div>
+
+                </div>-->
+                <div id="toolbar-center" class="btn-group">
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="searchByCategoryId();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadAddArea();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+
+
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="deleteArea();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <table id="table-center"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="modal-area" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="width: 80%">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">快处中心</h4>
+            </div>
+            <div class="modal-body" id="modal-items">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        查询条件
+                                    </div>
+
+                                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                                        <label class="col-xs-1 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                                        <div class="col-xs-4">
+                                            <input id="area-findname" class="form-control" oninput="searchAddArea();"></input>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div id="table-center-rebuildDiv">
+                                    <table id="table-center-AddArea"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+
+
+                <button type="button" id="button-center-add" class="btn btn-primary" onclick="addArea();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<!-- 类操作模态框 -->
+<div class="modal fade" id="modal-cate" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="cateMethodName">类操作模态框</h4>
+            </div>
+            <div class="modal-body" id="modal-cate-items">
+                <!--<div class="input-group">
+                    <span class="input-group-addon">名称</span>
+                    <input id="input-center-name" type="text" class="form-control" placeholder="值">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">图标上传</span>
+                    <input id="input-center-icon" type="file" class="form-control">
+                </div>-->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <button type="button" id="button-cate-update" class="btn btn-primary" onclick="updateCate();">
+                    提交更改
+                </button>
+
+                <button type="button" id="button-cate-add" class="btn btn-primary" onclick="addCate();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+
+
+
+<!--快处中心-->
+<script>
+    //获取分局列表
+    getreasonCategory();
+    function getreasonCategory() {
+        $.ajax({
+            type: "GET",
+            url: "/s/substation?t="+new Date().getTime(),
+            dataType: "json",
+            data: {page:1,size:99},
+            success: function(data) {
+                if (data.result) {
+                    $('#ul-cates').empty();
+                    for (var i=0;i<data.msg.content.length;i++){
+                        var li='<li class="li-cate" categoryId="'+data.msg.content[i].id+'" categoryName="'+data.msg.content[i].name+'" ><a href="#"><i class="fa  fa-circle-o"></i>'+data.msg.content[i].name+'</a></li>';
+                        $('#ul-cates').append(li);
+                    }
+                    if ($('#ul-cates li').length>0){
+                        $('#ul-cates li')[0].click();
+                    }
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+    //打开类添加模态框
+    function loadCateAdd(){
+        $('#cateMethodName').html('创建快处中心');
+        $('#modal-cate-items').empty();
+        var itemCate = '<div class="input-group">' +
+                       '     <span class="input-group-addon">中心名称</span>' +
+                       '     <input id="input-cate-name" type="text" class="form-control" >' +
+                       '</div>';
+
+
+        $('#modal-cate-items').append(itemCate);
+
+        $('#button-cate-update').hide();
+        $('#button-cate-add').show();
+
+        $('#modal-center').modal('toggle');
+
+    }
+    //确定添加类
+    function addCate(){
+        var name = $('#input-cate-name').val();
+        $.ajax({
+            type: "POST",
+            url: "/s/substation",
+            dataType: "json",
+            data: {name:name},
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                    $('#modal-cate').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+
+    //加载修改类模态框
+    function loadCateUpdate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的中心");return;}
+
+        var id=$($('#ul-cates>.active')[0]).attr('categoryid');
+        var name = $($('#ul-cates>.active')[0]).attr('categoryname');
+
+
+        $('#cateMethodName').html('修改快出中心');
+        $('#modal-cate-items').empty();
+        var itemCate = '<div class="input-group">' +
+                       '     <span class="input-group-addon">中心名称</span>' +
+                       '     <input id="input-cate-name" type="text" class="form-control" >' +
+                       '</div>';
+
+
+        $('#modal-cate-items').append(itemCate);
+        $('#input-cate-name').val(name);
+
+        $('#button-cate-add').hide();
+        $('#button-cate-update').show();
+        $('#modal-cate').modal('toggle');
+    }
+
+    //确定修改类
+    function updateCate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的类型");return;}
+
+        var id=$($('#ul-cates>.active')[0]).attr('categoryid');
+        var name = $('#input-cate-name').val();
+
+        $.ajax({
+            type: "PUT",
+            url: "/s/substation/"+id,
+            dataType: "json",
+            data: {name:name},
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                    $('#modal-cate').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
+
+    function deleteCate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的类型");return;}
+        var id=$($('#ul-cates>.active')[0]).attr('categoryid');
+
+        $.ajax({
+            type: "DELETE",
+            url: "/s/substation/"+id,
+            dataType: "json",
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+
+
+
+
+    //绑定监听类型点击事件
+    $('#ul-cates').on('click','li',function(){
+        $('#ul-cates li').removeClass("active");
+        $(this).addClass("active");
+        $('#center-search').val('');
+        var centerId=$($(this)[0]).attr('categoryId');
+        $.cookie('centerIdForFrontPage',centerId);
+        searchByCategoryId();
+    });
+
+
+    <!--管辖区域-->
+
+    $("#table-center").bootstrapTable({ // 对应table标签的id
+        url: '/s/jurisdictionArea/bySubstation/'+0, // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-center",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        singleSelect: true,//单选
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        //pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+
+            return {
+                size: 9999,//params.limit,//params.limit, // 每页要显示的数据条数
+                page: 1// (params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'name', // 返回json数据中的name
+                title: '区域名称', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }
+
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+        },
+        onLoadError: function() {  //加载失败时执行
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+
+
+    function loadAddArea() {//打开添加，并初始化数据
+
+        $('#modal-area').modal('toggle');
+
+        $('#myModalLabel').html('添加');
+        $('#behavior-findname').val('');
+
+        $('#table-center-rebuildDiv').empty();
+        $('#table-center-rebuildDiv').append('<table id="table-center-AddArea"></table>');
+
+
+        //初始化待添加表
+        initToaddTable();
+
+
+
+    }
+
+    function addArea() {//确定添加
+        if ($('#ul-cates .active').length!=1){
+            alert('请确认要添加区域的所属分局');
+        }
+        var exsitAreas=$("#table-center").bootstrapTable('getOptions').data;
+        var toaddAreas=$("#table-center-AddArea").bootstrapTable('getSelections');
+
+        var allAreas=exsitAreas.concat(toaddAreas);
+
+        var areaIds=new Array();
+        for (var i=0;i<allAreas.length;i++){
+            areaIds.push(allAreas[i].id);
+        }
+        var centerId=$.cookie('centerIdForFrontPage');
+
+
+        //上传图标,获取对应的url
+        $.ajax({
+            type: "PUT",
+            url: "/s/substation/"+centerId,
+            dataType: "json",
+            data: {areaIds:areaIds},
+            success: function(data) {
+
+                if (data.result){
+                    alert('添加成功');
+                    $('#modal-area').modal('toggle');
+                    searchByCategoryId();
+                }else{
+                    alert('添加失败');
+                }
+
+
+            }
+        });
+    }
+
+    //删除
+    function deleteArea(){
+        var exsitAreas=$("#table-center").bootstrapTable('getOptions').data;
+        var exsitIds=new Array();
+        for (var i=0;i<exsitAreas.length;i++) {
+            exsitIds.push(exsitAreas[i].id);
+        }
+        var todeleteAreas=$("#table-center").bootstrapTable('getSelections');
+        var todeleteIds=new Array();
+        for (var i=0;i<todeleteAreas.length;i++) {
+            todeleteIds.push(todeleteAreas[i].id);
+        }
+        for (var i = exsitIds.length - 1; i >= 0; i--) {
+            a = exsitIds[i];
+            for (var j = todeleteIds.length - 1; j >= 0; j--) {
+                b = todeleteIds[j];
+                if (a == b) {
+                    exsitIds.splice(i, 1);
+                    todeleteIds.splice(j, 1);
+                    break;
+                }
+            }
+        }
+        var centerId=$.cookie('centerIdForFrontPage');
+        $.ajax({
+            type: "PUT",
+            url: "/s/substation/"+centerId,
+            dataType: "json",
+            data: {areaIds:exsitIds},
+            success: function(data) {
+
+                if (data.result){
+                    alert('删除成功');
+                    $("#table-center").bootstrapTable('refresh');
+                }else{
+                    alert('删除失败');
+                }
+            }
+        });
+
+
+    }
+
+
+    //带参数:类id查询
+    function searchByCategoryId() {
+        var categoryId=$($('#ul-cates .active')[0]).attr('categoryid');
+        var description=$('#center-search').val();
+
+        $("#table-center").bootstrapTable('refresh', {
+            url: '/s/jurisdictionArea/bySubstation/'+categoryId,
+            query: {
+                description:description
+            }
+        });
+    }
+
+</script>
+
+<!-- 待添加的区域表-->
+<script>
+
+
+    //初始化待添加表
+    function initToaddTable() {
+        var centerId=$.cookie('centerIdForFrontPage');
+        $("#table-center-AddArea").bootstrapTable({ // 对应table标签的id
+            url: "/s/jurisdictionArea/excludeBySubstation/"+centerId, // 获取表格数据的url
+            method: 'GET',
+            contentType: "application/x-www-form-urlencoded",
+            dataType: 'json',
+            toolbarAlign: 'right',
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            singleSelect: false,//单选
+            pageSize: 20, // 页面数据条数
+            pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+            pageNumber: 1, // 首页页码
+            pagination: true,//是否分页
+            sidePagination: "server",  // 设置为服务器端分页
+            queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+                return {
+                    size: params.limit,//params.limit, // 每页要显示的数据条数
+                    page: (params.offset / params.limit) + 1, // 当前页
+                };
+            },
+            /* sortName: 'name', // 要排序的字段
+             sortOrder: 'desc', // 排序规则 */
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    field: 'name', // 返回json数据中的name
+                    title: '区域名称', // 表格表头显示文字
+                    align: 'center', // 左右居中
+                    valign: 'middle' // 上下居中
+                }
+            ],
+            responseHandler: function(res) {
+                return {total: res.msg.totalElements, rows: res.msg.content};
+            },
+            onLoadSuccess: function() {  //加载成功时执行
+                //禁用全选
+                $("input[name='btSelectAll']").attr("hidden", "true");
+                console.info("加载成功");
+            },
+            onLoadError: function() {  //加载失败时执行
+                console.info("加载数据失败");
+            },
+            //单击选中
+            onClickRow: function(row, $element) {
+                $($element.children()[0]).children().click();
+            }
+        });
+    }
+
+    function  searchAddArea() {
+        $("#table-center-AddArea").bootstrapTable('refresh', {
+            query: {
+                name: $("#area-findname").val()
+            }
+        });
+    }
+
+</script>

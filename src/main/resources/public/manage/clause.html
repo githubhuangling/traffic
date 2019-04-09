@@ -1,0 +1,267 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">法律条款</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                        <label class="col-xs-2 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                        <div class="col-xs-4">
+                            <input id="clause-findname" class="form-control" oninput="search();"></input>
+                        </div>
+
+                        <!--<div class="col-xs-2 col-xs-offset-1">
+                            <button type="button" class="btn btn-default toolbar-btn" onclick="search();">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">&nbsp;</span>查询
+                            </button>
+                        </div>-->
+                    </div>
+
+                </div>
+                <div id="toolbar-clause" class="btn-group">
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="refresh();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadAddModal();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadUpdateMoadl();">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span>修改
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="deleteData();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <table id="table-clause"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="modal-clause" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">法律条款</h4>
+            </div>
+            <div class="modal-body" id="modal-items">
+                <!--<div class="input-group">
+                    <span class="input-group-addon">名称</span>
+                    <input id="input-clause-name" type="text" class="form-control" placeholder="值">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">图标上传</span>
+                    <input id="input-clause-icon" type="file" class="form-control">
+                </div>-->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <button type="button" id="button-clause-update" class="btn btn-primary" onclick="updateData();">
+                    提交更改
+                </button>
+
+                <button type="button" id="button-clause-add" class="btn btn-primary" onclick="addData();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<script>
+
+    $("#table-clause").bootstrapTable({ // 对应table标签的id
+        url: "/s/clause", // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-clause",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        singleSelect: true,//单选
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+            return {
+                size: params.limit,//params.limit, // 每页要显示的数据条数
+                page: (params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'clause', // 返回json数据中的name
+                title: '条款名称', // 表格表头显示文字
+                align: 'left', // 居左
+                valign: 'middle' // 上下居中
+            }
+        ],
+        responseHandler: function(res) {
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refresh() {//刷新表
+        $("#table-clause").bootstrapTable('refresh', {url: '/s/clause'});
+    }
+
+    function loadAddModal() {//打开添加，并初始化数据
+        $('#myModalLabel').html('添加');
+        $('#modal-items').empty();
+        var itemClause = '<div class="input-group">' +
+                           '     <span class="input-group-addon">条款名称</span>' +
+                           '     <input id="input-clause-name" type="text" class="form-control" placeholder="">' +
+                           '</div>';
+
+
+        $('#modal-items').append(itemClause);
+
+        $('#button-clause-update').hide();
+        $('#button-clause-add').show();
+
+        $('#modal-clause').modal('toggle');
+
+    }
+
+    function addData() {//确定添加
+        var clause = $('#input-clause-name').val();
+        $.ajax({
+            type: "POST",
+            url: "/s/clause/",
+            dataType: "json",
+            data: {clause:clause},
+            success: function(data) {
+                if (data.result) {
+                    $("#table-clause").bootstrapTable('refresh', {slient:true});
+                    $('#modal-clause').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
+
+    function loadUpdateMoadl() {//打开修改框，并初始化数据
+        var row = $("#table-clause").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            $('#myModalLabel').html('添加');
+            $('#modal-items').empty();
+            var itemClause = '<div class="input-group">' +
+                               '     <span class="input-group-addon">条款名称</span>' +
+                               '     <input id="input-clause-name" type="text" class="form-control" placeholder="">' +
+                               '</div>';
+
+
+            $('#modal-items').append(itemClause);
+
+            $('#input-clause-name').val(row[0].clause);
+
+            $('#button-clause-add').hide();
+            $('#button-clause-update').show();
+
+            $('#modal-clause').modal('toggle');
+        } else {
+            alert('请选择要修改的数据');
+        }
+    }
+
+    //修改参数
+    function updateData() {
+        //获取选择的一条数据
+        var row = $("#table-clause").bootstrapTable('getSelections');
+        var id=row[0].id;
+        var clause= $('#input-clause-name').val();
+        $.ajax({
+            type: "PUT",
+            url: "/s/clause/"+id,
+            dataType: "json",
+            data: {clause:clause},
+            success: function(data) {
+                if (data.result) {
+                    $("#table-clause").bootstrapTable('refresh', {slient:true});
+                    $('#modal-clause').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+    //删除
+    function deleteData(){
+        var row = $("#table-clause").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            $.ajax({
+                type: "DELETE",
+                url: "/s/clause/"+row[0].id,
+                dataType: "json",
+                success: function(data) {
+                    if (data.result) {
+                        $("#table-clause").bootstrapTable('refresh', {slient:true});
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        } else {
+            alert('请选择要修改的数据');
+        }
+    }
+
+
+
+    //带参数查询
+    function search() {
+        $("#table-clause").bootstrapTable('refresh', {
+            url: '/s/clause',
+            query: {
+                clause: $("#clause-findname").val()
+            }
+        });
+    }
+</script>
+

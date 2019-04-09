@@ -1,0 +1,43 @@
+body{
+    background:url("../../image/customer/bg/bg.png") no-repeat;
+}
+.logo{
+    margin-top: 116px;
+    margin-left: 120px;
+}
+ul{
+    margin-top: 236px;
+    margin-left: 476px;
+}
+ul li{
+    text-align: center;
+    margin-right:250px;
+    float:  left;
+}
+.icon{
+}
+.icon>img{
+    vertical-align: center;
+    margin-top:30px;
+}
+.Scan-QR-Code{
+    position:absolute;
+    right:110px;
+    bottom:110px;
+}
+.Scan-QR-Code>img{
+    float:right;
+    width:115px;
+    height:115px;
+}
+.Scan-QR-Code>div{
+    float:right;
+    text-align: right;
+    color:#3C69DE;
+    font-size:36px;
+    margin-right:51px;
+}
+.Scan-QR-Code .home-title{
+    font-size:40px;
+    margin-bottom: 14px;
+}

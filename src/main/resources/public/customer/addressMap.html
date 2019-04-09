@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+	body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+	.btnMapSmall{
+		width: 60px;height: 60px;font-size: 48px;position: absolute;text-align: center;vertical-align: middle;background: #3C69DE;color: #FFFFFF;border: none;left: 100px;top: 700px;
+	}
+	.btnMapBig{
+		width: 60px;height: 60px;font-size: 48px;position: absolute;text-align: center;vertical-align: middle;background: #3C69DE;color: #FFFFFF;border: none;left: 100px;top: 600px;
+	}
+	</style>
+	<title>地图-事故发生地点</title>
+	    <link rel="stylesheet" href="../../static/style/customer/common.css">
+	    <link rel="stylesheet" href="../../static/style/customer/accident_information.css">
+	    <link rel="stylesheet" href="../../static/style/customer/accident_info_upload.css">
+	    <link rel="stylesheet" href="../../static/style/customer/font_calendar.css">
+	<!-- jQuery 3 -->
+    <script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+</head>
+<body>
+	<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+
+       var opts = {
+					width : 250,     // 信息窗口宽度
+					height: 80,     // 信息窗口高度
+					title : "事故发生地点：" , // 信息窗口标题
+					enableMessage:true//设置允许信息窗发送短息
+	   };
+	   
+	//百度地图API功能
+	function loadJScript() {
+		var script = document.createElement("script");
+		script.type = "text/javascript";
+		script.src = "http://api.map.baidu.com/api?v=2.0&ak=d8qR2fRYpIgLMLh0oFEFMCdlkFCiA5Ht&callback=init";
+		document.body.appendChild(script);
+	}
+	// 编写自定义函数,创建标注
+	function addMarker(point){
+	  var marker = new BMap.Marker(point);
+	  map.addOverlay(marker);
+	}
+	
+	//用于点击标注显示详情
+	function addClickHandler(content,marker,map){
+		marker.addEventListener("click",function(e){
+			openInfo(content,e,map)}
+		);
+	}
+	//用于点击标注显示详情
+	function openInfo(content,e,map){
+		var p = e.target;
+		var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+		var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
+		map.openInfoWindow(infoWindow,point); //开启信息窗口
+	}
+	
+	//初始化
+	function init() {
+		map = new BMap.Map("allmap");            // 创建Map实例
+		var point = new BMap.Point(104.07, 30.67); // 创建点坐标
+		map.centerAndZoom(point,15);                 
+		map.enableScrollWheelZoom();                     //启用滚轮放大缩小
+        map.enableDragging();   //开启拖拽
+        map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+    		map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+		// 往地图中添加搜索提示框
+		function G(id) {
+			return document.getElementById(id);
+		}
+		var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+				{"input" : "suggestId"
+				,"location" : map
+			});
+			ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+			var str = "";
+				var _value = e.fromitem.value;
+				var value = "";
+				if (e.fromitem.index > -1) {
+					value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+				}    
+				str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+				
+				value = "";
+				if (e.toitem.index > -1) {
+					_value = e.toitem.value;
+					value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+				}    
+				str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+				G("searchResultPanel").innerHTML = str;
+			});
+			var myValue;
+			ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+			var _value = e.item.value;
+				myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+				G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+				
+				setPlace();
+			});
+			function setPlace(){
+				map.clearOverlays();    //清除地图上所有覆盖物
+				function myFun(){
+					var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+					map.centerAndZoom(pp, 18);
+					map.addOverlay(new BMap.Marker(pp));    //添加标注
+					//经纬度赋值
+					parent.addressLng = point.lng;
+					parent.addressLat = point.lat;
+				}
+				var local = new BMap.LocalSearch(map, { //智能搜索
+				  onSearchComplete: myFun
+				});
+				local.search(myValue);
+			}
+			
+			
+			//往地图中添加自定义视图层
+			function ZoomControl(){
+			  // 默认停靠位置和偏移量
+			  this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+			  this.defaultOffset = new BMap.Size(10, 10);
+			}
+			ZoomControl.prototype = new BMap.Control();
+			ZoomControl.prototype.initialize = function(map){
+			  var div = document.createElement("div");
+			  $(div).html(createChildHTML());
+			  map.getContainer().appendChild(div);
+			  return div;
+			}
+			// 创建控件
+			var myZoomCtrl = new ZoomControl();
+			// 添加到地图当中
+			map.addControl(myZoomCtrl);
+			//给键盘绑定点击事件
+			$("li").click(function(){
+
+				 var searchs = $("#suggestId").val();
+				 var keyVal = $(this).text();
+				 if(keyVal=='清空'){
+					 searchs = '';
+				 }else if(keyVal=='删除'){
+					 searchs = searchs.substring(0,searchs.length-1);
+				 }else{
+					 searchs += keyVal;
+				 }
+				 //缓存地名
+				 addressName = searchs;
+			     
+			     $("#suggestId").val(searchs);
+		    });
+			
+			
+			//单击时获取地理名称
+			var geoc = new BMap.Geocoder();    
+			map.addEventListener("click", function(e){        
+				var pt = e.point;
+				geoc.getLocation(pt, function(rs){
+					var addComp = rs.addressComponents;
+					addressName = addComp.province + addComp.city  + addComp.district + addComp.street + addComp.streetNumber;
+					$("#suggestId").val(addressName);
+				});        
+			});
+			
+			//单击获取经纬度
+			map.addEventListener("click",function(e){
+				parent.addressLng = e.point.lng;
+				parent.addressLat = e.point.lat;
+			});
+			
+			//分局区域
+			for(var k in window.parent.substations){
+				var sk = parent.substations[k].roundArea.split("-");
+				for(var j in sk){
+					var ss = sk[j];
+					var pois = [];
+					  var sss = ss.split(",");
+					  for(var i=0;i<sss.length;i++){
+					    pois.push(new BMap.Point(sss[i],sss[i+1]));
+					    i++;
+					  }
+					var strokeColor = ["#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF","#FF6666",][k];
+					var polyline =new BMap.Polyline(pois, {
+						   enableEditing: false,//是否启用线编辑，默认为false
+						   enableClicking: true,//是否响应点击事件，默认为true
+						   
+						   strokeWeight:'8',//折线的宽度，以像素为单位
+						   strokeOpacity: 0.8,//折线的透明度，取值范围0 - 1
+						   strokeColor:strokeColor //折线颜色
+						});
+					//map.addOverlay(polyline); //增加折线
+				}
+			}
+			
+	}
+	//创建地图层结构
+	function createChildHTML(){
+		
+	       var html = "<div><button class=\"btnMapBig\" href=\"javascript:void(0);\" onclick=\"mapBig();return false;\">+</button> <button class=\"btnMapSmall\" href=\"javascript:void(0);\" onclick=\"mapSmall();return false;\">-</button>\n\t\t\t\t\t\t           <div>\n\t\t\t\t\t           <div class=\"input-list\">\n\t\t\t\t\t       \t         <div id=\"r-result\"><input type=\"text\" id=\"suggestId\" placeholder=\"请输入地名\" onpropertychange=\"getAddressPoint();\"></div>\n\t\t\t\t\t    \t          <div id=\"searchResultPanel\" style=\"border:1px solid #C0C0C0;width:150px;height:auto; display:none;\"></div>\n\t\t\t\t\t           </div>\n\t\t\t\t\t           <div class=\"key-num\">\n\t\t\t\t\t           <ul>\n\t\t\t\t\t               <li>1</li>\n\t\t\t\t\t               <li>2</li>\n\t\t\t\t\t               <li>3</li>\n\t\t\t\t\t               <li>4</li>\n\t\t\t\t\t               <li>5</li>\n\t\t\t\t\t               <li>6</li>\n\t\t\t\t\t               <li>7</li>\n\t\t\t\t\t               <li>8</li>\n\t\t\t\t\t               <li>9</li>\n\t\t\t\t\t               <li>0</li>\n\t\t\t\t\t           </ul><ul>\n\t\t\t\t\t               <li>A</li>\n\t\t\t\t\t               <li>B</li>\n\t\t\t\t\t               <li>C</li>\n\t\t\t\t\t               <li>D</li>\n\t\t\t\t\t               <li>E</li>\n\t\t\t\t\t               <li>F</li>\n\t\t\t\t\t               <li>G</li>\n\t\t\t\t\t               <li>H</li>\n\t\t\t\t\t               <li>I</li>\n\t\t\t\t\t               <li class=\"empty\">清空</li>\n\t\t\t\t\t           </ul><ul>\n\t\t\t\t\t               <li>J</li>\n\t\t\t\t\t               <li>K</li>\n\t\t\t\t\t               <li>L</li>\n\t\t\t\t\t               <li>M</li>\n\t\t\t\t\t               <li>N</li>\n\t\t\t\t\t               <li>O</li>\n\t\t\t\t\t               <li>P</li>\n\t\t\t\t\t               <li>Q</li>\n\t\t\t\t\t               <li>R</li>\n\t\t\t\t\t               <li class=\"delete\">删除</li>\n\t\t\t\t\t           </ul><ul>\n\t\t\t\t\t               <li>S</li>\n\t\t\t\t\t               <li>T</li>\n\t\t\t\t\t               <li>U</li>\n\t\t\t\t\t               <li>V</li>\n\t\t\t\t\t               <li>W</li>\n\t\t\t\t\t               <li>X</li>\n\t\t\t\t\t               <li>Y</li>\n\t\t\t\t\t               <li>Z</li>\n\t\t\t\t\t           </ul>\n\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t       <footer class=\"footer map-footer\">\n\t\t\t\t\t       <a href=\"javascript:void(0);\" onclick=\"returnPointInfo();return false;\">确定</a>\n\t\t\t\t\t       <a href=\"javascript:void(0);\" onclick=\"closeWindow();return false;\">取消</a>\n\t\t\t\t\t</footer>\n\t\t\t\t\t</div>";
+		 return html;
+	}
+	//子页面回调函数
+	function returnPointInfo(){
+		if(parent.addressLng==null || parent.addressLat==null){
+			alert("请在地图上选择事故地点");
+			return false;
+		}
+		//回写地名
+		$(window.parent.document.getElementById("trafficAccidentAddress")).val($("#suggestId").val());
+		//解析经纬度
+		var myGeo = new BMap.Geocoder();
+		myGeo.getPoint($("#suggestId").val(), function(point){
+			parent.addressLng = point.lng;
+			parent.addressLat = point.lat;
+
+            myGeo.getLocation(new BMap.Point(point.lng, point.lat), function(rs){
+                var addComp = rs.addressComponents;
+
+                var hideAddressName = addComp.province + "," + addComp.city + "," + addComp.district;
+
+
+
+            });
+            parent.canNext();
+		}, "成都市");
+
+
+
+		closeWindow();
+	}
+	//关闭子页面
+	function closeWindow(){
+		
+		    $(window.parent.document.getElementById("popBox")).remove();
+	}
+	function mapSmall(){
+		var zo = map.getZoom();
+		if(zo>8){
+			zo--;
+		}
+		map.setZoom(zo);
+	}
+	function mapBig(){
+		var zo = map.getZoom();
+		if(zo<19){
+			zo++;
+		}
+		map.setZoom(zo);
+	}
+	
+	window.onload = loadJScript;  //异步加载地图
+	
+</script>
+
+

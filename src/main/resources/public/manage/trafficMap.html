@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">事故分布点</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+                        <div class="input-group date datepicker col-xs-2" style="float: left">
+                            <span class="input-group-addon">时间：</span>
+                            <input type='text' class='form-control selectData' id='date1' name='date'>
+                        </div>
+                        <div class="input-group date datepicker col-xs-2" style="float: left">
+                            <span class="input-group-addon" style="border: #FFFFFF">至</span>
+                            <input type='text' class='form-control selectData' id='date2' name='date'
+                                   style="margin-left: 10px;">
+                        </div>
+
+                        <div class="col-xs-2 " style="margin-left: 4px">
+                            <button type="button" id="btnShowPoint" class="btn btn-default toolbar-btn"
+                                    onclick="show();">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">&nbsp;</span>查询
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <iframe id="contentIframe" src="/manage/accidentPointMap.html" width="100%"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function show() {
+        document.getElementById("contentIframe").contentWindow.showPoint($('#date1').val(),$('#date2').val());
+    }
+    //设置默认时间
+    $('#date1').val(format((new Date().getTime()-(30*24*60*60*1000)),'yyyy-MM-dd'));
+    $('#date2').val(format(new Date(),'yyyy-MM-dd'));
+
+    //初始化地图窗口高度方法
+    function initIframeHeight(){
+        var iframe = document.getElementById("contentIframe");
+        $(iframe).height($(window).height()-300);
+    }
+
+    $(function(){
+        //初始化地图窗口高度
+        initIframeHeight();
+        //打开页面默认显示最近30天
+        setTimeout(show,1200);
+    });
+
+    //日期选择器
+    $.fn.datepicker.dates['cn'] = {   //切换为中文显示
+        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        daysShort: ["日", "一", "二", "三", "四", "五", "六", "七"],
+        daysMin: ["日", "一", "二", "三", "四", "五", "六", "七"],
+        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        today: "今天",
+        clear: "清除"
+    };
+
+    $('.selectData').datepicker({
+        autoclose: true, //自动关闭
+        beforeShowDay: $.noop,    //在显示日期之前调用的函数
+        calendarWeeks: false,     //是否显示今年是第几周
+        clearBtn: false,          //显示清除按钮
+        daysOfWeekDisabled: [],   //星期几不可选
+        endDate: Infinity,        //日历结束日期
+        forceParse: true,         //是否强制转换不符合格式的字符串
+        format: 'yyyy-mm-dd',     //日期格式
+        keyboardNavigation: true, //是否显示箭头导航
+        language: 'cn',           //语言
+        minViewMode: 0,
+        orientation: "auto",      //方向
+        rtl: false,
+        startDate: -Infinity,     //日历开始日期
+        startView: 0,             //开始显示
+        todayBtn: false,          //今天按钮
+        todayHighlight: false,    //今天高亮
+        weekStart: 0              //星期几是开始
+    });
+</script>

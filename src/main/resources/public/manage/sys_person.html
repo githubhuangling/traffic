@@ -1,0 +1,861 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">系统操作员</h3>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id="toolbar-sysperson" class="btn-group">
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="refreshSysperson();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadSyspersonUpdate();">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span>修改
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadSyspersonAdd();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="SyspersonDelete();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <table id="table-sysperson"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <form class="bs-example bs-example-form">
+
+
+                    <div class="input-group">
+						<span class="input-group-addon">&nbsp;&nbsp;工&nbsp;&nbsp;号
+							&nbsp;&nbsp;</span> <input id="input-empNo" type="text"
+                                                             autocomplete="off" class="form-control">
+                    </div>
+                    <br>
+                    <div class="input-group">
+						<span class="input-group-addon">
+							&nbsp;&nbsp;姓&nbsp;&nbsp;名 &nbsp;&nbsp;</span> <input
+                            id="input-name" type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <br>
+                    <div class="input-group">
+						<span class="input-group-addon">
+							&nbsp;&nbsp;密&nbsp;&nbsp;码 &nbsp;&nbsp;</span> <input
+                            id="input-password" type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <span class="input-group-addon">电话号码</span> <input
+                            id="input-phone" type="text" autocomplete="off" class="form-control">
+                    </div>
+                    <br>
+                    <div class="input-group" id="div-valiDate">
+                        <span class="input-group-addon">有效日期</span> <input
+                            id="input-validDate" type="text" autocomplete="off" class="form-control flexDate"/>
+                    </div>
+                    <br>
+                    <div  style="text-align: center; padding: 10px;"><img id="showImg-signature" src="" width="5%"></div>
+                    <div class="input-group" id="div-signature">
+                        <span class="input-group-addon">&nbsp;&nbsp;&nbsp;签&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;</span>
+                        <input id="input-signature" type="file" class="form-control">
+                    </div>
+
+                    <br>
+                    <div class="input-group" >
+                        <span class="input-group-addon">所属分局</span>
+                        <select class="form-control" id="select-center">
+                            <option>option 1</option>
+                            <option>option 2</option>
+                            <option>option 3</option>
+                            <option>option 4</option>
+                            <option>option 5</option>
+                        </select>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <span>性别：</span>
+                            <input class='input-gender' type="radio" id="gender-true" name="gender" value='1'/>
+                            <label for="gender-true"><span>男</span></label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class='input-gender' type="radio" id=
+                                    "gender-false" name="gender" value='0'/>
+                            <label for="gender-false"><span>女</span></label>
+                        </div>
+
+                        <!-- 可用状态 -->
+                        <div class="col-xs-6">
+
+                            <span>可用状态：</span>
+                            <input class='input-active' type="radio" id="active-true" name="active" value='1'/>
+                            <label for="active-true"><span>可用</span></label>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class='input-active' type="radio" id="active-false" name="active" value='0'/>
+                            <label for="active-false"><span>不可用</span></label>
+
+                        </div>
+
+                        <br>
+
+
+
+
+                    </div>
+                    <br>
+                    <br>
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">操作员身份</h3>
+                        </div>
+                        <div class="box-body" id="box-roles">
+                            <!-- <a class="btn btn-app">
+                              <span class="badge bg-red">x</span>
+                              <i class="fa fa-car"></i> 司机
+                            </a>
+                            <a class="btn btn-app">
+                              <span class="badge bg-red">x</span>
+                              <i class="fa fa-car"></i> 厨师
+                            </a> -->
+                            <div class="btn-group btn-group-add" id="box-btn-addrole">
+                                <a class="btn btn-app btn-app-add" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    <i class="fa fa-user-plus"></i> 添加
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-add" id="ul-roles-addList">
+                                    <li><a href="#">司机</a></li>
+                                    <li><a href="#">厨师</a></li>
+                                    <li><a href="#">收银员</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary"
+                        id="btn-sysperson-update">提交更改
+                </button>
+                <button type="button" class="btn btn-primary"
+                        id="btn-sysperson-add">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<script src="/script/manage/md5.js"></script>
+<script>
+    //先隐藏模态框的两个按钮
+    $('#btn-sysperson-add').hide();
+    $('#btn-sysperson-update').hide();
+    //初始化表格
+    $("#table-sysperson").bootstrapTable({ // 对应table标签的id
+        url: "/s/sysperson/person/findAll", // 获取表格数据的url
+        method: 'get',
+        toolbar: '#toolbar-sysperson', //工具按钮容器
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        singleSelect: true,//单选
+        toolbar: "#toolbar-sysperson",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+
+            return {
+                size: params.limit,//params.limit, // 每页要显示的数据条数
+                page: (params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'empNo',
+                title: '工号',
+                align: 'center',
+                valign: 'middle',
+                searchable: false
+            }, {
+                field: 'name', // 返回json数据中的name
+                title: '姓名', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'roles',
+                title: '身份',
+                align: 'center',
+                valign: 'middle',
+                formatter: function(value, row, index) {
+                    var names = "";
+                    for (var i = 0; i < value.length; i++) {
+                        if (value[i].state == (-1)) {//当该角色的某一身份已被删除时，则跳过
+                            continue;
+                        }
+                        names = names + "，" + value[i].name;
+
+                    }
+                    return names.substr(1);
+                }
+            }, {
+                field: 'active',
+                title: '是否可用',
+                align: 'center',
+                valign: 'middle',
+                formatter: function(value, row, index) {
+                    var active = (value == 1 ? '可用' : '不可用');
+                    return active;
+                }
+            }, {
+                field: 'validDate',
+                title: '有效期限',
+                align: 'center',
+                valign: 'middle',
+                formatter: function(value, row, index) {
+                    var time = format(value, "yyyy-MM-dd HH:mm:ss");
+                    return time;
+                }
+            },{
+                field: 'signaturePic',
+                title: '签名',
+                align: 'center',
+                valign: 'middle',
+                width: '20%',
+                formatter: function(value, row, index){
+                    $('#table-sysperson').css({ "table-layout": "fixed"});
+                    var img='<img id="showIconImg" src="'+row.signaturePic+'" width="90%">';
+                    return img;
+                }
+            },{
+                field: 'substation',
+                title: '所属分局',
+                align: 'center',
+                valign: 'middle',
+                formatter: function(value, row, index) {
+                    if (value!=null){
+                        return value.name;
+                    }
+                    return value;
+                }
+            },
+
+            // TODO: 协调中心CRUD
+            // {
+            //     field: 'phone',
+            //     title: '电话号码',
+            //     align: 'center',
+            //     valign: 'middle',
+            //     visible: false
+            // },
+            // {
+            //     field: 'organize',
+            //     title: '组织',
+            //     align: 'center',
+            //     valign: 'middle',
+            //     visible: true,
+            //     formatter: function(value, row, index) {
+            //         return value.name;
+            //     }
+            //
+            // }
+
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+
+    });
+
+    //刷新表
+    function refreshSysperson() {
+        $("#table-sysperson").bootstrapTable('refresh', {url: '/s/sysperson/person/findAll'});
+
+    }
+
+    //删除
+    function SyspersonDelete() {
+        var row = $("#table-sysperson").bootstrapTable('getSelections');
+
+        if (row.length == 1) {
+            var toDeletePersonId = row[0].id;
+            $.ajax({
+                type: "get",
+                url: "/s/sysperson/person/deleteById",
+                data: {toDeletePersonId: toDeletePersonId},
+                dataType: "json",
+                success: function(data) {
+                    if (data.result) {
+                        alert("删除成功");
+                        $("#table-sysperson").bootstrapTable('refresh', {url: "/s/sysperson/person/findAll"});
+                    }
+                }
+            });
+
+        } else {
+            alert('请选择要删除的一条数据');
+            return;
+        }
+    }
+
+    //确定按钮绑定事件
+    $('#btn-sysperson-update').click(updateSysperson);
+    $('#btn-sysperson-add').click(addSysperson);
+
+    //打开修改框
+    var toUpdatePersonId;
+
+    function loadSyspersonUpdate() {
+        $('#btn-sysperson-add').hide();
+        $('#btn-sysperson-update').show();
+        //清除模态框旧数据
+        $('#input-empNo').val('');
+        $('#input-name').val('');
+        $('#input-password').val('');
+        $('#input-phone').val('');
+        $('#input-validDate').val('');
+
+        //初始化可添加的角色列表
+        $('#ul-roles-addList').empty();
+        if ($('#box-roles').children('a').length > 0) {
+            $('#box-roles').children('a').remove();
+        }
+        getRoleList();
+
+        var row = $("#table-sysperson").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            toUpdatePersonId = row[0].id;
+            //获取行数据，填入模态框
+            $('#input-empNo').attr('placeholder', row[0].empNo);
+            $('#input-name').attr('placeholder', row[0].name);
+            //$('#input-password').attr('placeholder', row[0].password);
+            $('#input-phone').attr('placeholder', row[0].phone);
+            if (row[0].active == 1) {
+                $('#active-true').click();
+            } else {
+                $('#active-false').click();
+            }
+            if (row[0].gender == 1) {
+                $('#gender-true').click();
+            } else {
+                $('#gender-false').click();
+            }
+            $('#input-validDate').attr('placeholder', format(row[0].validDate, "yyyy-MM-dd HH:mm:ss"));
+            //填入已拥有身份
+            for (var i = 0; i < row[0].roles.length; i++) {
+                //跳过已失效身份
+                if (row[0].roles[i].state == (-1)) {
+                    break;
+                }
+                var roleId = row[0].roles[i].id;
+                var name = row[0].roles[i].name;
+                $('#box-btn-addrole').before('<a class="btn btn-app" roleId=' + roleId +
+                                             ' onclick="boxRoleRemove(this);"> ' +
+                                             '<span class="badge bg-red">x</span> ' +
+                                             '<i class="fa fa-user"></i> ' + name + ' ' +
+                                             '</a>');
+            }
+            //重置签名
+            $('#showImg-signature').attr('src','');
+            var file = document.getElementById('input-signature');
+            file.value = '';
+            file.outerHTML = file.outerHTML;
+            $('#input-signature').change(function() {
+                $('#showImg-signature').attr('src',URL.createObjectURL($('#input-signature')[0].files[0]));
+            });
+
+            /*//清理签名缓存
+            $('#showImg-signature').remove();
+            $('#div-signature').remove();
+            //添加签名标签
+            var divSignature= '<div class="input-group" id="div-signature">\n' +
+                              '\t\t\t\t\t\t<span class="input-group-addon">&nbsp;&nbsp;&nbsp;签&nbsp;&nbsp;名\n' +
+                              '\t\t\t\t\t\t\t&nbsp;&nbsp;&nbsp;</span> <input id="input-signature" type="file" class="form-control">\n' +
+                              '                    </div>';
+            //拼接到可用日期后面
+            $('#div-valiDate').after(divSignature);
+
+            //上传签名后预览
+            var img='<div  style="text-align: center; padding: 10px;"><img id="showImg-signature" src="'+row[0].signature+'" width="5%"></div>';
+
+            $('#div-signature').before(img);
+            $('#input-signature').change(function() {
+                $('#showImg-signature').attr('src',URL.createObjectURL($('#input-signature')[0].files[0]));
+            });*/
+
+            //获取分局列表
+            $('#select-center').empty();
+            $.ajax({
+                type: "GET",
+                url: "/s/substation",
+                dataType: "json",
+                data: {page:1,size:99999},
+                success: function(data) {
+                    if (data.result) {
+                        var nulloption='<option value="0">请选择</option>';
+                        $('#select-center').append(nulloption);
+                        for (var i=0;i<data.msg.content.length;i++){
+                            var option='<option value="'+data.msg.content[i].id+'">'+data.msg.content[i].name+'</option>';
+                            $('#select-center').append(option);
+                        }
+                        if (row[0].substation!=null){
+                            $('#select-center').val(row[0].substation.id);
+                        }
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+
+
+            $('#myModal').modal('toggle');
+
+        } else {
+            alert('请选择要修改的数据');
+            return;
+        }
+
+    }
+
+    //提交修改
+    function updateSysperson() {
+        //获取修改框中各值
+        var empNo = $('#input-empNo').val();
+
+        var name = $('#input-name').val();
+
+
+        if ($('#input-password').val().trim().length>0){
+            var password = hex_md5($('#input-password').val());
+        }else{
+            var password="";
+        }
+
+
+        var phone = $('#input-phone').val();
+        if ((phone.length != 0 && phone.length != 11) || !(phone % 1 === 0)) {//判断电话号码是否正确
+            alert('电话号码输入不正确。（座机请加区号，例：02887654321）');
+            return;
+        }
+
+        var active = $('.input-active:checked').val();
+
+        var validDate1 = $('#input-validDate').val();
+        if (validDate1.length != 0 && CheckDateTime(validDate1) == false) {//判断日期格式
+            alert("有效期格式错误");
+            return;
+        }
+
+        var gender = $('.input-gender:checked').val();
+
+        var roleIds = "";
+        for (var i = 0; i < $('#box-roles').children('a').length; i++) {
+            var newRoleId = $($('#box-roles').children('a')[i]).attr('roleId');
+            roleIds = roleIds + "," + newRoleId;
+        }
+        if (roleIds == "") {
+            alert("请选择至少一个身份");
+        }
+        roleIds = roleIds.substr(1);
+
+        if ($("#input-signature")[0].files.length==0){
+
+            var id = toUpdatePersonId;
+            var person = {
+                id: id,
+                empNo: empNo,
+                name: name,
+                password: password,
+                phone: phone,
+                active: active,
+                gender: gender,
+                roleIds: roleIds,
+                validDate1: validDate1
+            };
+            var substationId= $('#select-center').val();
+            if (substationId!=0){
+                person.substationId=$('#select-center').val();
+            }
+            $.ajax({
+                type: "get",
+                url: "/s/sysperson/person/update",
+                data: person,
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        $('#myModal').modal('toggle');
+                        $("#table-sysperson").bootstrapTable('refresh');
+                    }
+                }
+            });
+        }else {//修改了签名图
+            var formData = new FormData();
+            formData.append("file", $("#input-signature")[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "/manage/upload/uploadFile",
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    if (data.result) {
+                        var url = data.msg;
+
+                        var id = toUpdatePersonId;
+                        var person = {
+                            id: id,
+                            empNo: empNo,
+                            name: name,
+                            password: password,
+                            phone: phone,
+                            active: active,
+                            gender: gender,
+                            roleIds: roleIds,
+                            validDate1: validDate1,
+                            signaturePic:url
+                        };
+                        var substationId= $('#select-center').val();
+                        if (substationId!=0){
+                            person.substationId=$('#select-center').val();
+                        }
+                        $.ajax({
+                            type: "get",
+                            url: "/s/sysperson/person/update",
+                            data: person,
+                            dataType: "json",
+                            success: function(data) {
+                                if (data.success) {
+                                    $('#myModal').modal('toggle');
+                                    $("#table-sysperson").bootstrapTable('refresh');
+                                }
+                            }
+                        });
+                    } else {
+                        alert('图片上传失败:'+data.msg);
+                    }
+
+                }
+            });
+        }
+
+
+
+
+
+    }
+
+    //打开添加框
+    function loadSyspersonAdd() {
+        $('#btn-sysperson-add').show();
+        $('#btn-sysperson-update').hide();
+
+        //初始化
+        $('#input-empNo').attr('placeholder', '');
+        $('#input-name').attr('placeholder', '');
+        $('#input-password').attr('placeholder', '');
+        $('#input-phone').attr('placeholder', '');
+        $('#input-validDate').attr('placeholder', '');
+        $('#input-validDate').attr('placeholder', '');
+
+        $('#input-empNo').val('');
+        $('#input-name').val('');
+        $('#input-password').val('');
+        $('#input-phone').val('');
+        $('#input-validDate').val('');
+        $('#gender-true').click();
+        $('#active-true').click();
+
+        //初始化可添加的角色列表
+        $('#ul-roles-addList').empty();
+        if ($('#box-roles').children('a').length > 0) {
+            $('#box-roles').children('a').remove();
+        }
+        getRoleList();
+
+        //重置签名
+        $('#showImg-signature').attr('src','');
+        var file = document.getElementById('input-signature');
+        file.value = '';
+        file.outerHTML = file.outerHTML;
+        $('#input-signature').change(function() {
+            $('#showImg-signature').attr('src',URL.createObjectURL($('#input-signature')[0].files[0]));
+        });
+
+        //获取分局列表
+        $('#select-center').empty();
+        $.ajax({
+            type: "GET",
+            url: "/s/substation",
+            dataType: "json",
+            data: {page:1,size:99999},
+            success: function(data) {
+                if (data.result) {
+                    var nulloption='<option value="0">请选择</option>';
+                    $('#select-center').append(nulloption);
+                    for (var i=0;i<data.msg.content.length;i++){
+                        var option='<option value="'+data.msg.content[i].id+'">'+data.msg.content[i].name+'</option>';
+                        $('#select-center').append(option);
+                    }
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+
+
+        $('#myModal').modal('toggle');
+    }
+
+    //提交添加
+    function addSysperson() {
+        var empNo = $('#input-empNo').val();
+        var name = $('#input-name').val();
+        var password = hex_md5($('#input-password').val());
+        var phone = $('#input-phone').val();
+        if (phone.length != 11 || !(phone % 1 === 0)) {//判断电话号码是否正确
+            alert('电话号码输入不正确。（座机请加区号，例：02887654321）');
+            return;
+        }
+        var active = $('.input-active:checked').val();
+        var validDate1 = $('#input-validDate').val();
+        //判断日期格式
+        if (CheckDateTime(validDate1) == false) {
+            alert("有效期格式错误");
+            return;
+        }
+        var gender = $('.input-gender:checked').val();
+        var roleIds = "";
+        for (var i = 0; i < $('#box-roles').children('a').length; i++) {
+            var newRoleId = $($('#box-roles').children('a')[i]).attr('roleId');
+            roleIds = roleIds + "," + newRoleId;
+        }
+        roleIds = roleIds.substr(1);
+
+
+        if ($("#input-signature")[0].files.length==0){
+            var addPerson = {
+                empNo: empNo,
+                name: name,
+                password: password,
+                phone: phone,
+                active: active,
+                gender: gender,
+                roleIds: roleIds,
+                validDate1: validDate1
+            };
+            var substationId= $('#select-center').val();
+            if (substationId!=0){
+                addPerson.substationId=$('#select-center').val();
+            }
+            function isEmpty(data) {
+                if (data.trim() == "") {
+                    return true;
+                }
+                return false;
+            }
+            if (isEmpty(empNo)) {
+                alert("工号不能为空");
+                return;
+            } else if (isEmpty(name)) {
+                alert("姓名不能为空");
+                return;
+            } else if (isEmpty(password)) {
+                alert("密码不能为空");
+                return;
+            } else if ( isEmpty(phone)) {
+                alert("电话不能为空");
+                return;
+            } else if ( isEmpty(validDate1)) {
+                alert("可用日期不能为空");
+                return;
+            } else if ( isEmpty(roleIds)) {
+                alert("操作员角色不能为空");
+                return;
+            }
+
+            //提交创建person
+            $.ajax({
+                type: 'post',
+                url: "/s/sysperson/person/add",
+                data: addPerson,
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        $("#table-sysperson").bootstrapTable('refresh');
+                        $('#myModal').modal('toggle');
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+
+
+        }else{
+            var formData = new FormData();
+            formData.append("file", $("#input-signature")[0].files[0]);
+            $.ajax({
+                type: "POST",
+                url: "/manage/upload/uploadFile",
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    if (data.result) {
+                        var url = data.msg;
+
+                        var addPerson = {
+                            empNo: empNo,
+                            name: name,
+                            password: password,
+                            phone: phone,
+                            active: active,
+                            gender: gender,
+                            roleIds: roleIds,
+                            validDate1: validDate1,
+                            signaturePic:url
+                        };
+                        var substationId= $('#select-center').val();
+                        if (substationId!=0){
+                            addPerson.substationId=$('#select-center').val();
+                        }
+
+                        if (empNo == "" || name == "" || password == "" || phone == "" || validDate1 == "" || roleIds == "") {
+                            alert("不能为空");
+                            return;
+                        }
+
+                        //提交创建person
+                        $.ajax({
+                            type: 'post',
+                            url: "/s/sysperson/person/add",
+                            data: addPerson,
+                            dataType: "json",
+                            success: function(data) {
+                                if (data.success) {
+                                    $("#table-sysperson").bootstrapTable('refresh');
+                                    $('#myModal').modal('toggle');
+                                }else{
+                                    alert(data.msg);
+                                }
+                            }
+                        });
+                    } else {
+                        alert('图片上传失败:'+data.msg);
+                    }
+
+                }
+            });
+        }
+
+
+
+    }
+
+    //从后台获取roles
+    function getRoleList() {
+
+        $.ajax({
+            type: "get",
+            url: "/s/sysrole/person/findAll",
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    for (var i = 0; i < data.content.length; i++) {
+                        var li = "<li id='li-roleList-" + data.content[i].id + "' roleId=" + data.content[i].id +
+                                 " onclick='boxAddRole(this);'><a href='#'>" + data.content[i].name + "</a></li>";
+                        $('#ul-roles-addList').append(li);
+                    }
+                } else {
+                    alert("获取身份列表失败");
+                }
+            }
+        });
+    }
+
+    //角色框内添加角色
+    function boxAddRole(obj) {
+        var name = obj.innerText;
+        var roleId = $(obj).attr('roleId');
+
+        for (var i = 0; i < $('#box-roles').children('a').length; i++) {
+            var newRoleId = $($('#box-roles').children('a')[i]).attr('roleId');
+            if (newRoleId == roleId) {
+                alert('已拥有该身份');
+                return;
+            }
+        }
+
+        $('#box-btn-addrole').before('<a class="btn btn-app" roleId=' + roleId + ' onclick="boxRoleRemove(this);"> ' +
+                                     '<span class="badge bg-red">x</span> ' +
+                                     '<i class="fa fa-user"></i> ' + name + ' ' +
+                                     '</a>');
+    }
+
+    // 角色框内删除角色
+    function boxRoleRemove(obj) {
+        $(obj).remove();
+    }
+</script>
+
+
+<script>
+    var oHead = document.getElementsByTagName('HEAD').item(0);
+    var oscript = document.createElement("script");
+    oscript.type = "text/javascript";
+    oscript.src = "/libs/flexDate/flexDate.min.js";
+    oHead.appendChild(oscript);
+</script>
+
+
+
+
+

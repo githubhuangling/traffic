@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>身份证识别</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css">
+    <link rel="stylesheet" href="../../static/style/customer/identification.css">
+    <link rel="stylesheet" href="../../static/style/customer/search_result.css">
+</head>
+<body>
+    <div class="page-identification">
+        <div class="header">
+            <a href="/customer/index"><img src="../../static/image/customer/icon/home.png"/></a>
+            身份证识别
+        </div>
+        <div class="id-main">
+            <div class="img">
+                <img src="../../static/image/customer/icon/card.gif"/>
+            </div>
+            <p>将身份证放入识别区</p>
+        </div>
+    </div>
+    <div class="page-search-result hide">
+        <div class="header">
+            <a href="/customer/index"><img src="../../static/image/customer/icon/home.png"/></a>
+            查询结果
+        </div>
+        <div class="main">
+            <div class="search-top-title">
+                <div>
+                    姓名：
+                    <span id="idCardName"></span>
+                </div>
+                <div>
+                    证件号码：
+                    <span id="idCardNumber"></span>
+                </div>
+            </div>
+            <table class="search-main-dtl">
+                <thead>
+                <tr class="search-dtl-title">
+                    <th>事故时间</th>
+                    <th>事故当事人</th>
+                    <th>事故车辆</th>
+                    <th>事故地点</th>
+                    <th>协商类型</th>
+                    <th>数据来源</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+            <div class="footer">
+                <a href="/customer/index">完成</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+    <script type="text/javascript" src="../../static/script/customer/common.js"></script>
+    <script type="text/javascript" src="../../static/libs/device/idcard/socket.io.js"></script>
+    <script type="text/javascript" src="../../static/libs/device/idcard/read1.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+body{
+    width:100vw;
+    height:100vw;
+    background:url("../../image/customer/bg/bg_4.png") no-repeat;
+    background-size:contain;
+    padding:0;
+    margin:0;
+}
+.head{
+    width:100%;
+    margin:auto;
+    padding-left: 60px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+}
+.top-title li{
+    display:inline-block;
+    vertical-align: bottom;
+    text-align:center;
+    line-height:60px;
+    font-size: 32px;
+    color: #5A94FF;
+}
+.waiting-number{
+    margin-right:150px;
+    margin-left:27px;
+}
+.processing-seq-2{
+    margin-right:150px;
+}
+.details-title{
+    margin-top:40px;
+    font-size: 32px;
+    width: 1800px;
+    height: 110px;
+    overflow:  hidden;
+    background-color: #5A94FF;
+    color: #fff;
+    border-radius: 8px;
+    line-height: 110px;
+}
+.title{
+    margin-right: 170px;
+    margin-left:40px;
+}
+.title-details li{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.title-details li:nth-child(2){
+    width: 12%;
+    margin-right: 150px;
+}
+.title-details li:nth-child(3){
+    width: 25%;
+    margin-right: 150px;
+}
+.title-details li:nth-child(4){
+    width: 20%;
+}
+.wait-list{
+    width:1800px;
+    margin: auto;
+}
+table{
+    width:100%;
+    border-collapse: collapse;
+    background-color:#fff;
+    table-layout: fixed;
+}
+table th{
+    text-align:center;
+    background-color: #D3E3FF;
+    font-weight: normal;
+    height: 70px;
+    font-size:32px;
+}
+table tr{
+    border: 1px solid #CACAE1;
+    border-radius: 8px;
+}
+table td{
+    height:80px;
+    text-align:center;
+    font-size:30px;
+}
+table th,table td{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.wait-no{
+    width: 10%;
+}
+.car-no,.wait-person{
+    width: 25%;
+}
+.wait-time,.wait-address{
+    width:20%;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../../static/style/customer/common.css">
+    <link rel="stylesheet" href="../../static/style/customer/agreement.css">
+    <link rel="stylesheet" href="../../static/style/customer/preview_print.css">
+    <title>表单</title>
+
+</head>
+<body>
+<div id="img" class="img"></div>
+<div id="buttonsGroup" class="close-btn print-mrg">
+    <button id="print" class="">打印</button>
+    <button id="close" class="">关闭</button>
+</div>
+
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script>
+    $.get('/customer/previewAgreement?t='+new Date().getTime(), {}, function(data) {
+        if (data.result) {
+            $('#img').append($('<img src="' + data.msg + '"/>'));
+        } else {
+            alert(data.msg);
+        }
+
+    });
+    $('#print').click(function() {
+        //$('#buttonsGroup').hide();
+        $.get('http://localhost:9999/ae0c6017d105b4ce/print?t='+new Date().getTime(), {
+            fileUrl: location.href.substr(0, location.href
+                                                     .indexOf(location.pathname))
+                     + $($('#img>img')[0]).attr('src').replace(/'\\'/g, '/')
+        }, function(data) {
+            if (data.result) {
+                alert('上传协议书,并打印成功!');
+            } else {
+                alert(data.msg);
+            }
+        });
+        window.print();
+        setTimeout(function() {
+            $('#ƒ').show();
+        },3000);
+    });
+    $('#close').click(function() {
+          window.location = '/customer/index';
+      }
+    );
+
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>事故信息录入</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css">
+    <link rel="stylesheet" href="../../static/style/customer/accident_information.css">
+    <link rel="stylesheet" href="../../static/style/customer/accident_situation.css">
+</head>
+<body>
+<header class="header">
+    <a href="incident_information.html" id="back"><img src="../../static/image/customer/button/back_up.png"
+                                             alt=""/></a>事故信息录入<span>事故情形</span>
+</header>
+<div class="main">
+    <ul class="ac-situation-title">
+        <li class="ac-situation-time">事故时间：<span></span></li>
+        <li class="ac-situation-address">事故地点：<span class="ac-address"></span></li>
+        <li class="ac-situation-weather">天气：<span></span></li>
+    </ul>
+    <div class="ac-situation-content-box">
+        <div class="ac-situation-content-l">
+        </div>
+        <div class="ac-situation-content-r">
+            <ul id="dc"></ul>
+        </div>
+        <ul class="ac-situation-list" id="ac-part">
+        </ul>
+        <footer class="footer">
+            <a id="next" class="disable-href" href="accident_negotiation.html">下一步</a>
+        </footer>
+    </div>
+</div>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="../../static/script/customer/common.js"></script>
+<script type="text/javascript" src="../../static/script/customer/accident_situation.js"></script>
+</body>
+</html>

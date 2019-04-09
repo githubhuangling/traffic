@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>上传事故照片</title>
+    <meta name="viewport" content="width=device-width"/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="../../static/style/customer/m_info_upload.css"/>
+</head>
+<body>
+<div class="logo">
+    <img src="../../static/image/customer/bg/logo.png"/>
+</div>
+<h2 class="title">事故照片/视频上传<span></span></h2>
+<ul class="up-l">
+    <li class="m-img-head">
+        <div class="img">
+            <img src="../../static/image/customer/icon/accident_1.png"/>
+        </div>
+        <p>侧前方</p>
+    </li>
+    <li class="m-img-head">
+        <div class="img">
+            <img src="../../static/image/customer/icon/accident_0.png"/>
+        </div>
+        <p>侧后方</p>
+    </li>
+    <li class="m-img-head">
+        <div class="img">
+            <img src="../../static/image/customer/icon/accident_2.png"/>
+        </div>
+        <p>碰撞部位</p>
+    </li>
+    <li class="m-img-head">
+        <div class="img">
+            <img src="../../static/image/customer/icon/accident_other.png"/>
+        </div>
+        <p>其他</p>
+    </li>
+</ul>
+<ul class="up-r">
+    <li class="m-img-head">
+        <div class="ac-up-file">
+            <input id="mediaPart0" type="file"/>
+        </div>
+        <p>上传照片</p>
+    </li>
+    <li class="m-img-head">
+        <div class="ac-up-file">
+            <input id="mediaPart1" type="file"/>
+        </div>
+        <p>上传照片</p>
+    </li>
+    <li class="m-img-head">
+        <div class="ac-up-file">
+            <input id="mediaPart2" type="file"/>
+        </div>
+        <p>上传照片</p>
+    </li>
+    <li class="m-img-head">
+        <div class="ac-up-file">
+            <input id="mediaPart3" type="file"/>
+        </div>
+        <p>上传视频</p>
+    </li>
+</ul>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="../../static/script/customer/common.js"></script>
+<script th:inline="javascript">
+    uuid = /*[[${uuid}]]*/;
+    asdf = /*[[${asdf}]]*/;
+</script>
+<script type="text/javascript" src="../../static/script/customer/m_info_upload.js"></script>
+</body>
+</html>

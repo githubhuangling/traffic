@@ -1,0 +1,625 @@
+<div class="modal fade" style="z-index: 1150;" id="detail-modal-img" tabindex="-1" role="dialog"
+     aria-labelledby="detail-modal-img" aria-hidden="true" >
+    <div class="modal-dialog" style="width: 90%;">
+        <div class="modal-content">
+            <div id="printDiv" class="modal-body" style="width: 100%;margin: 0px auto">
+                <img id="detail-showBigImg"  style="width: 100%;" src="">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="printAgreement();">打印</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal-->
+<div class="modal fade" id="reprocessModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width: 90%;font-size: 1rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">事故详情</h4>
+            </div>
+            <div class="modal-body" style="width: 100%;margin: 0px auto">
+                <div style="border: #c0c0c0 solid 0.25px">
+                    <div style="height:250px;border: #c0c0c0 solid 0.25px;background-color: hsla(210, 100%, 87%, 0.5);">
+                        <div style="float:left;height:100%;width:1%;border: #c0c0c0 solid 0.25px">事故基本信息</div>
+                        <div id="detail-baseInfo" style="float:left;height:100%;width:99%;border: #c0c0c0 solid 0.25px;">
+                            <div class="eachrow" style="width: 100%;height: 10%">
+                                <div style="float: left;width: 6%;">事故编号</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-serialNumber"></div>
+                                <div style="float: left;width: 7%;">六合一事故编号</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-sgbh"></div>
+                                <div style="float: left;width: 7%;">事故发生时间</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-occurredTime"></div>
+                                <div style="float: left;width: 3%;">天气</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-weather"></div>
+                                <div style="float: left;width: 2%;">经度</div>
+                                <div style="float: left;width: 6%;" id="detail-baseInfo-longitude"></div>
+                                <div style="float: left;width: 2%;">纬度</div>
+                                <div style="float: left;width: 6%;" id="detail-baseInfo-latitude"></div>
+                                <div style="float: left;width: 3%;">地址</div>
+                                <div style="float: left;width: 30%;" id="detail-baseInfo-location"></div>
+                            </div> <!--id="detail-baseInfo-"-->
+                            <div class="eachrow" style="width: 100%;height: 10%">
+                                <div style="float: left;width: 5%;" class="detailForOnline" >排队号</div>
+                                <div style="float: left;width: 5%;" class="detailForOnline" id="detail-baseInfo-seqNumber"></div>
+                                <div style="float: left;width: 5%;">处理方式</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-processMode"></div>
+                                <div style="float: left;width: 5%;">处理状态</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-processStatus"></div>
+                                <div style="float: left;width: 6%;">所属快处中心</div>
+                                <div style="float: left;width: 7%;" id="detail-baseInfo-conductCenter"></div>
+                                <div style="float: left;width: 4%;" class="detailForOnline" >行政区划</div>
+                                <div style="float: left;width: 5%;" class="detailForOnline"  id="detail-baseInfo-xzqh"></div>
+                                <div style="float: left;width: 4%;" class="detailForOnline" >道路代码</div>
+                                <div style="float: left;width: 5%;"  class="detailForOnline" id="detail-baseInfo-dldm"></div>
+                                <div style="float: left;width: 4%;" class="detailForOnline" >路段代码</div>
+                                <div style="float: left;width: 5%;"  class="detailForOnline" id="detail-baseInfo-lddm"></div>
+                                <div style="float: left;width: 4%;" class="detailForOnline" >公里数</div>
+                                <div style="float: left;width: 5%;"  class="detailForOnline" id="detail-baseInfo-gls"></div>
+                                <div style="float: left;width: 3%;" class="detailForOnline" >米数</div>
+                                <div style="float: left;width: 5%;"  class="detailForOnline" id="detail-baseInfo-ms"></div>
+                                <div style="float: left;width: 3%;" class="detailForOnline" >交警</div>
+                                <div style="float: left;width: 6%;"  class="detailForOnline" id="detail-baseInfo-sysPerson"></div>
+                            </div>
+                            <div class="eachrow" style="width: 100%;height: 10%">
+                                <div style="float: left;width: 5%;">事故原因</div>
+                                <div style="float: left;width: 95%;" id="detail-baseInfo-accidentReason"></div>
+                            </div>
+                            <div class="eachrow detailForOnline" style="width: 100%;height: 25%">
+                                <div style="float: left;width: 5%;">事实及责任</div>
+                                <div style="float: left;width: 95%;" id="detail-baseInfo-inFactResponsibility"></div>
+                            </div>
+                            <div class="eachrow detailForOnline" style="width: 100%;height: 15%">
+                                <div style="float: left;width: 5%;">认定结果</div>
+                                <div style="float: left;width: 95%;" id="detail-baseInfo-coordinationResult"> </div>
+                            </div>
+                            <div class="eachrow detailForOnline" style="width: 100%;height: 30%;border-bottom: none;">
+                                <div style="float: left;width: 5%;border-right: #c0c0c0 solid 0.25px">认定书</div>
+                                <div style="float: left;width: 45%;"><img id="detail-baseInfo-agreementPicUrl"
+                                                                          style="margin:2px;height: 97%;" src=""></div>
+                                <div style="float: left;width: 5%;">交警签名</div>
+                                <div style="float: left;width: 45%;"><img id="detail-baseInfo-signaturePic"
+                                                                          style="margin:2px;height: 97%;" src=""></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="height:250px;border: #c0c0c0 solid 0.25px;background-color: hsla(210, 100%, 87%, 0.5);"
+                         id="detail-img-div">
+                        <div style="float:left;height:100%;width:1%;border: #c0c0c0 solid 0.25px">现场照片</div>
+                        <div style="float:left;height:100%;width:99%;border: #c0c0c0 solid 0.25px;">
+                            <div class="eachrow" style="width: 100%;height: 50%">
+                                <div style="float: left;width: 5%;">侧前方</div>
+                                <div style="float: left;width: 45%;" id="detail-img-front"></div>
+                                <div style="float: left;width: 5%;">侧后方</div>
+                                <div style="float: left;width: 45%;" id="detail-img-back"></div>
+                            </div>
+                            <div class="eachrow" style="width: 100%;height: 50%;border-bottom: none;">
+                                <div style="float: left;width: 5%;">碰撞部位</div>
+                                <div style="float: left;width: 45%;" id="detail-img-intersect"></div>
+                                <div style="float: left;width: 5%;">其他</div>
+                                <div style="float: left;width: 45%;" id="detail-img-other"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="accidentDetails" style="margin: 0px auto" border="1" width="100%">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">事故详情查询</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+                        <div class="input-group date datepicker col-xs-3" style="float: left">
+                            <span class="input-group-addon">事故申请时间：</span>
+                            <input type='text' class='form-control selectData' id='date1' name='date'>
+                        </div>
+                        <div class="input-group date datepicker col-xs-2" style="float: left">
+                            <span class="input-group-addon" style="border: #FFFFFF">至</span>
+                            <input type='text' class='form-control selectData' id='date2' name='date'
+                                   style="margin-left: 10px;">
+                        </div>
+                        <div class="input-group col-xs-2" style="float: left;margin-left: 20px;">
+                            <span class="input-group-addon">事故处理方式：</span>
+                            <select id="processMode" class="form-control">
+                                <option value="">不限</option>
+                                <option value="0">自行协商</option>
+                                <option value="1">在线认定</option>
+                                <option value="2">线下处理</option>
+
+                            </select>
+                        </div>
+                        <div class="input-group col-xs-2" style="float: left;margin-left: 20px;">
+                            <span class="input-group-addon">事故处理状态：</span>
+                            <select id="processStatus" class="form-control">
+                                <option value="">不限</option>
+                                <option value="0">待处理</option>
+                                <option value="1">正在处理</option>
+                                <option value="2">处理完毕</option>
+                                <option value="3">当事人不在现场</option>
+                            </select>
+                        </div>
+
+
+                        <div class="input-group col-xs-2" style="float: left;margin-left: 10px;">
+                            <span class="input-group-addon">当事车牌号：</span>
+                            <input id="carNumber" type="text" class="form-control" placeholder="例：川A12345">
+                        </div>
+                        <div class="input-group col-xs-3 " style="float: left;margin-top: 10px;">
+                            <span class="input-group-addon">当事人身份证：</span>
+                            <input id="partyIdNumber" type="text" class="form-control" placeholder="">
+                        </div>
+                        <div class="input-group col-xs-2 " style="float: left;margin-top: 10px;margin-left: 10px;">
+                            <span class="input-group-addon">处理警官：</span>
+                            <select id="policeList" class="form-control">
+                                <option value="">不限</option>
+                            </select>
+                        </div>
+                        <div class="input-group col-xs-2 " style="float: left;margin-top: 10px;margin-left: 10px;">
+                            <span class="input-group-addon">事故处理中心：</span>
+                            <select id="conductConterList" class="form-control">
+                                <option value="">不限</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-2 " style="margin-top: 10px;margin-left: 4px">
+                            <button type="button" class="btn btn-default toolbar-btn"
+                                    onclick="refreshDetailsTable();">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">&nbsp;</span>查询
+                            </button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <table id="table-details"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //设置默认当天时间
+    $('#date1').val(format(new Date(),'yyyy-MM-dd'));
+    $('#date2').val(format(new Date(),'yyyy-MM-dd'));
+
+
+    $.ajax({//获取快处中心列表
+        type: "GET",
+        url: '/s/conductCenter/getConductCenter',
+        dataType: "json",
+        data: {page: 0, size: 999},
+        success: function(data) {
+            if (data.success) {
+                data.content.content.forEach(function(value) {
+                    $('#conductConterList').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            } else {
+                alert("获取快出中心列表失败");
+            }
+        },
+        error: function() {
+            alert('通信失败');
+        }
+    });
+    $.ajax({//获取事故处理交警列表
+        type: "GET",
+        url: '/s/sysperson/person/getPoliceList',
+        dataType: "json",
+        success: function(data) {
+            if (data.result) {
+                data.msg.polices.forEach(function(value) {
+                    $('#policeList').append('<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            } else {
+                alert("获取事故处理交警列表失败");
+            }
+        },
+        error: function() {
+            alert('通信失败');
+        }
+    });
+
+
+    $('#table-details').bootstrapTable({
+        url: '/manage/getAccidentDetails',         //请求后台的URL（*）
+        method: 'get',                      //请求方式（*）
+        toolbar: '#toolbar',                //工具按钮用哪个容器
+        striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                   //是否显示分页（*）
+        sortable: false,                     //是否启用排序
+        sortOrder: "asc",                   //排序方式
+        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                       //初始化加载第一页，默认第一页
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+        search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+        strictSearch: false,
+        showColumns: false,                  //是否显示所有的列
+        showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 1,             //最少允许的列数
+        clickToSelect: true,                //是否启用点击选中行
+        //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+        uniqueId: "accidentId",                     //每一行的唯一标识，一般为主键列
+        showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+        cardView: false,                    //是否显示详细视图
+        detailView: false,                   //是否显示父子表
+        singleSelect: true,               //单选
+        queryParams: {//传递参数（*）
+            sDate:format(new Date(),"yyyy-MM-dd"),
+            eDate:format(new Date(),"yyyy-MM-dd"),
+            page:0,
+            size:10
+        },
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'createTime',
+                title: '事故申请时间'
+            }, {
+                field: 'serialNumber',
+                title: '事故编号'
+            }, {
+                field: 'occurredTime',
+                title: '事故发生时间'
+            }, {
+                field: 'parties',
+                title: '当事人'
+            }, {
+                field: 'carNumbers',
+                title: '当事车辆号牌'
+            }, {
+                field: 'processMode',
+                title: '事故处理方式'
+            }, {
+                field: 'processStatus',
+                title: '事故处理状态'
+            }, {
+                field: 'conductCenterName',
+                title: '快处中心'
+            }, {
+                field: 'processSysperson',
+                title: '事故处理交警'
+            }, {
+                field: 'accidentId',
+                title: '事故详情',
+                formatter: function(value, row, index) {
+                    var btn = '<button class="btn btn-default toolbar-btn" onclick="showDetailsModal(this,event,' +
+                              value + ');">\n' +
+                              '                        <span  aria-hidden="true">&nbsp;</span>查看详情' +
+                              '                    </button>';
+                    return btn;
+                }
+            }],
+        responseHandler: function(res) {
+            if (res == null) {
+                return null;
+            }
+            return res.msg.accidents;
+        }
+    });
+
+    function refreshDetailsTable() {
+        $('#table-details').bootstrapTable('refresh', {
+            query: {
+                sDate: $('#date1').val(),
+                eDate: $('#date2').val(),
+                carNumber: $('#carNumber').val(),
+                partyIdNumber: $('#partyIdNumber').val(),
+                conductCenterId: $('#conductConterList').val(),
+                processMode: $('#processMode').val(),
+                processStatus: $('#processStatus').val(),
+                accidentSyspersonId: $('#policeList').val()
+            }
+        });
+    }
+
+    function showDetailsModal(object, event, value) {
+        event.stopPropagation();
+        var id = value;
+        $.ajax({//根据id获取该事故详情
+            type: "GET",
+            url: '/manage/getAccidentDetailsById',
+            dataType: "json",
+            data: {id: id},
+            success: function(data) {
+                if (data.result) {
+                    var details = data.msg.accidentDetailsById;
+                    /*******************隐藏不必要信息********/
+                    $('.detailForOnline').hide();
+                    if (details.processMode == "在线认定"){$('.detailForOnline').show();}
+
+                    /**************事故基本信息*/
+                    $('#detail-baseInfo-serialNumber').html(details.serialNumber);
+                    $('#detail-baseInfo-sgbh').html(details.sgbh);
+                    $('#detail-baseInfo-occurredTime').html(details.occurredTime);
+                    $('#detail-baseInfo-weather').html(details.weather);
+                    $('#detail-baseInfo-longitude').html(details.longitude);
+                    $('#detail-baseInfo-latitude').html(details.latitude);
+                    $('#detail-baseInfo-location').html(details.location);
+
+                    $('#detail-baseInfo-seqNumber').html(details.seqNumber);
+                    $('#detail-baseInfo-processMode').html(details.processMode);
+                    $('#detail-baseInfo-processStatus').html(details.processStatus);
+                    $('#detail-baseInfo-conductCenter').html(details.conductCenter);
+                    $('#detail-baseInfo-xzqh').html(details.xzqh);
+                    $('#detail-baseInfo-dldm').html(details.dldm);
+                    $('#detail-baseInfo-lddm').html(details.lddm);
+                    $('#detail-baseInfo-gls').html(details.gls);
+                    $('#detail-baseInfo-ms').html(details.ms);
+                    $('#detail-baseInfo-sysPerson').html(details.sysPerson);
+
+                    $('#detail-baseInfo-accidentReason').html(details.accidentReason);
+                    $('#detail-baseInfo-inFactResponsibility').html(details.inFactResponsibility);
+                    $('#detail-baseInfo-coordinationResult').html(details.coordinationResult);
+
+                    $('#detail-baseInfo-agreementPicUrl').attr('src', details.agreementPicUrl==null?"":details.agreementPicUrl);
+                    $('#detail-baseInfo-signaturePic').attr('src', details.signaturePic==null?"":details.signaturePic);
+
+                    /*****************事故照片*/
+                    /*侧前方*/
+                    $('#detail-img-front').empty();
+                    if (details.accidentMediaResponses[2]!=null&&details.accidentMediaResponses[2].pics.length>0){
+                        $('#detail-img-front').prev().html(details.accidentMediaResponses[2].part);
+                        details.accidentMediaResponses[2].pics.forEach(function(value) {
+                            var img = '<img style="margin:2px;width: 24%;height: 97%" src="' +
+                                      value + '">';
+
+                            $('#detail-img-front').append(img);
+                        });
+                    }
+                    /*侧后方*/
+                    $('#detail-img-back').empty();
+                    if (details.accidentMediaResponses[3]!=null&&details.accidentMediaResponses[3].pics.length>0){
+                        $('#detail-img-back').prev().html(details.accidentMediaResponses[3].part);
+                        details.accidentMediaResponses[3].pics.forEach(function(value) {
+                            var img = '<img style="margin:2px;width: 24%;;height: 97%" src="' +
+                                      value + '">';
+                            $('#detail-img-back').append(img);
+                        });
+                    }
+                    /*碰撞部位*/
+                    $('#detail-img-intersect').empty();
+                    if (details.accidentMediaResponses[1]!=null&&details.accidentMediaResponses[1].pics.length>0){
+                        $('#detail-img-intersect').prev().html(details.accidentMediaResponses[1].part);
+                        details.accidentMediaResponses[1].pics.forEach(function(value) {
+                            var img = '<img style="margin:2px;width: 24%;;height: 97%" src="' +
+                                      value + '">';
+                            $('#detail-img-intersect').append(img);
+                        });
+                    }
+
+                    /*侧前方*/
+                    $('#detail-img-other').empty();
+                    if (details.accidentMediaResponses[0]!=null&&details.accidentMediaResponses[0].pics.length>0){
+                        $('#detail-img-other').prev().html(details.accidentMediaResponses[0].part);
+                        details.accidentMediaResponses[0].pics.forEach(function(value) {
+                            var img = '<img style="margin:2px;width: 24%;;height: 97%" src="' +
+                                      value + '">';
+                            $('#detail-img-other').append(img);
+                        });
+                    }
+
+                    /****************当事人***/
+                    $('.details-partInfo').remove();
+                    details.parties.forEach(function(value) {
+                        var part = '<div class="details-partInfo" style="height:250px;border: #c0c0c0 solid 0.25px;background-color: #f389122e;">\n' +
+                                   '                        <div style="float:left;height:100%;width:1%;border: #c0c0c0 solid 0.25px">'+value.accidentIndex+'</div>\n' +
+                                   '                        <div  style="float:left;height:100%;width:99%;border: #c0c0c0 solid 0.25px;">\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 10%">\n' +
+                                   '                                <div style="float: left;width: 5%;">当事人</div>\n' +
+                                   '                                <div style="float: left;width: 12%;">'+value.name+'</div>\n' +
+                                   '                                <div style="float: left;width: 3%;">代码</div>\n' +
+                                   '                                <div style="float: left;width: 2%;">'+value.accidentIndex+'</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">事故责任</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">'+(value.responsibility==null?"未定责":value.responsibility)+'</div>\n' +
+                                   '                                <div style="float: left;width: 4%;">联系电话</div>\n' +
+                                   '                                <div style="float: left;width: 7%;">'+value.phone+'</div>\n' +
+                                   '                                <div style="float: left;width: 7%;">保险公司报案号</div>\n' +
+                                   '                                <div style="float: left;width: 9%;">'+value.reportNumber+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 10%">\n' +
+                                   '                                <div style="float: left;width: 5%;">驾驶证姓名</div>\n' +
+                                   '                                <div style="float: left;width: 17%;">'+value.driverName+'</div>\n' +
+                                   '                                <div style="float: left;width: 7%;">驾驶证六合一查询</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">'+(value.driverNotcustom?"已查询到":"未查询到")+'</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">驾驶证号</div>\n' +
+                                   '                                <div style="float: left;width: 11%;">'+value.driverNumber+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 10%">\n' +
+                                   '                                <div style="float: left;width: 5%;">车主姓名</div>\n' +
+                                   '                                <div style="float: left;width: 17%;">'+value.drivingName+'</div>\n' +
+                                   '                                <div style="float: left;width: 7%;">行驶证六合一查询</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">'+(value.drivingNotcustom=="true"?"已查询到":"未查询到")+'</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">车辆类型</div>\n' +
+                                   '                                <div style="float: left;width: 11%;">'+getCarType(value.drivingType)+'</div>\n' +
+                                   '                                <div style="float: left;width: 4%;">号牌号码</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">'+value.drivingNumber+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 10%">\n' +
+                                   '                                <div style="float: left;width: 5%;">保险公司</div>\n' +
+                                   '                                <div style="float: left;width: 17%;">'+value.insuranceCompany+'</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">保险凭证号</div>\n' +
+                                   '                                <div style="float: left;width: 19%;">'+value.insuranceCompulsory+'</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">保险期间</div>\n' +
+                                   '                                <div style="float: left;width: 5%;">'+value.insuranceDate+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 10%">\n' +
+                                   '                                <div style="float: left;width: 5%;">违法行为</div>\n' +
+                                   '                                <div style="float: left;width: 95%;">'+value.illegalBehavior+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 15%">\n' +
+                                   '                                <div style="float: left;width: 5%;">法律条款</div>\n' +
+                                   '                                <div style="float: left;width: 95%;">'+value.clause+'</div>\n' +
+                                   '                            </div>\n' +
+                                   '                            <div class="eachrow" style="width: 100%;height: 35%;border-bottom: none;">\n' +
+                                   '                                <div style="float: left;width: 5%;">驾驶证图片</div>\n' +
+                                   '                                <div style="float: left;width: 28.33%;"><img style="margin:2px;height: 97%;" src="'+value.driverPicUrl+'"></div>\n' +
+                                   '                                <div style="float: left;width: 5%;">行驶证图片</div>\n' +
+                                   '                                <div style="float: left;width: 28.33%;"><img style="margin:2px;height: 97%;" src="'+value.drivingPicUrl+'"></div>\n' +
+                                   '                                <div style="float: left;width: 5%;">当事人签名</div>\n' +
+                                   '                                <div style="float: left;width: 28.33%;"><img style="margin:2px;height: 97%;" src="'+(value.signaturePic==null?"":value.signaturePic)+'"></div>\n' +
+                                   '                            </div>\n' +
+                                   '                        </div>\n' +
+                                   '                    </div>';
+                        $('#detail-img-div').before(part);
+                    });
+                    $('#reprocessModal').modal('toggle');
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function() {
+                alert('通信失败');
+            }
+        });
+
+
+    }
+    /******************** 查看大图******/
+    $('#reprocessModal').on('click','img',function() {
+        console.log($(this));
+        $('#detail-showBigImg').attr('src',$(this)[0].currentSrc);
+        $('#detail-modal-img').modal('toggle');
+    });
+    $('#detail-modal-img').click(function() {
+        $('#detail-modal-img').modal('toggle');
+        $('#reprocessModal').css({'overflow-y':'scroll'});
+    });
+    /****************** 认定书打印***********/
+    function printAgreement(e) {
+        $('#printDiv').jqprint({
+            debug: false, //如果是true则可以显示iframe查看效果（iframe默认高和宽都很小，可以再源码中调大），默认是false
+            importCSS: true, //true表示引进原来的页面的css，默认是true。（如果是true，先会找$("link[media=print]")，若没有会去找$("link")中的css文件）
+            printContainer: true, //表示如果原来选择的对象必须被纳入打印（注意：设置为false可能会打破你的CSS规则）。
+            operaSupport: true//表示如果插件也必须支持歌opera浏览器，在这种情况下，它提供了建立一个临时的打印选项卡。默认是true
+        });
+        e.stopPropagation();
+        return false;
+    }
+
+</script>
+<script>
+    //日期选择器
+    $.fn.datepicker.dates['cn'] = {   //切换为中文显示
+        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        daysShort: ["日", "一", "二", "三", "四", "五", "六", "七"],
+        daysMin: ["日", "一", "二", "三", "四", "五", "六", "七"],
+        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        today: "今天",
+        clear: "清除"
+    };
+
+    $('.selectData').datepicker({
+        autoclose: true, //自动关闭
+        beforeShowDay: $.noop,    //在显示日期之前调用的函数
+        calendarWeeks: false,     //是否显示今年是第几周
+        clearBtn: false,          //显示清除按钮
+        daysOfWeekDisabled: [],   //星期几不可选
+        endDate: Infinity,        //日历结束日期
+        forceParse: true,         //是否强制转换不符合格式的字符串
+        format: 'yyyy-mm-dd',     //日期格式
+        keyboardNavigation: true, //是否显示箭头导航
+        language: 'cn',           //语言
+        minViewMode: 0,
+        orientation: "auto",      //方向
+        rtl: false,
+        startDate: -Infinity,     //日历开始日期
+        startView: 0,             //开始显示
+        todayBtn: false,          //今天按钮
+        todayHighlight: false,    //今天高亮
+        weekStart: 0              //星期几是开始
+    });
+
+    function getCarType(carType) {
+        var type = "";
+        for (var i = 0; i < carTypeArr.length; i++) {
+            if (carTypeArr[i].id == carType) {
+                type = carTypeArr[i].name;
+                break;
+            }
+        }
+        return type;
+    }
+
+    var carTypeArr = new Array();
+    carTypeArr.push(new cartype());
+
+    function cartype(id, name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    carTypeArr.push(new cartype("02", "小型汽车"));
+    carTypeArr.push(new cartype("52", "小型新能源汽车"));
+    carTypeArr.push(new cartype("01", "大型汽车"));
+    carTypeArr.push(new cartype("51", "大型新能源汽车"));
+    carTypeArr.push(new cartype("07", "普通摩托车"));
+    carTypeArr.push(new cartype("16", "教练汽车"));
+    carTypeArr.push(new cartype("31", "武警号牌"));
+    carTypeArr.push(new cartype("23", "警用汽车"));
+    carTypeArr.push(new cartype("15", "挂车"));
+    carTypeArr.push(new cartype("03", "使馆汽车"));
+    carTypeArr.push(new cartype("04", "领馆汽车"));
+    carTypeArr.push(new cartype("05", "境外汽车"));
+    carTypeArr.push(new cartype("06", "外籍汽车"));
+    carTypeArr.push(new cartype("08", "轻便摩托车"));
+    carTypeArr.push(new cartype("09", "使馆摩托车"));
+    carTypeArr.push(new cartype("10", "领馆摩托车"));
+    carTypeArr.push(new cartype("11", "境外摩托车"));
+    carTypeArr.push(new cartype("12", "外籍摩托车"));
+    carTypeArr.push(new cartype("13", "低速车"));
+    carTypeArr.push(new cartype("14", "拖拉机"));
+    carTypeArr.push(new cartype("17", "教练摩托车"));
+    carTypeArr.push(new cartype("18", "试验汽车"));
+    carTypeArr.push(new cartype("19", "试验摩托车"));
+    carTypeArr.push(new cartype("20", "临时入境汽车"));
+    carTypeArr.push(new cartype("21", "临时入境摩托车"));
+    carTypeArr.push(new cartype("22", "临时行驶车"));
+    carTypeArr.push(new cartype("24", "警用摩托"));
+    carTypeArr.push(new cartype("25", "原农机号牌"));
+    carTypeArr.push(new cartype("26", "香港入出境车"));
+    carTypeArr.push(new cartype("27", "澳门入出境车"));
+    carTypeArr.push(new cartype("32", "军队号牌"));
+
+
+</script>
+
+<style>
+    .eachrow {
+        border-top: #c0c0c0 solid .5px;
+        border-bottom: #c0c0c0 solid .5px;
+    }
+
+    .eachrow > div {
+        height: 100%;
+        border-left: #c0c0c0 solid .5px;
+        border-right: #c0c0c0 solid .5px;
+    }
+</style>

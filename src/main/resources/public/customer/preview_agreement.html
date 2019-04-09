@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>表单</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/agreement.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/accident_negotiation.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/preview_agreement.css"/>
+</head>
+<body>
+<div id="shade" class="shade hide"></div>
+<div style="width: 1620px;" id="divtopage" class="main-agree">
+    <div class="top-label">
+        <p id="agree-serialNumber">编号：510029567865</p>
+        <img id="agreement-qrcode"/>
+    </div>
+    <div class="title">道路交通事故自行协商协议</div>
+    <table class="agree-tb" border="1">
+        <tr>
+            <td colspan="2" class="data">事故发生时间</td>
+            <td id="accident-occuredtime">2018年05月24日16时10分</td>
+            <td class="data">事故发生地点</td>
+            <td colspan="5" id="accident-location">四川省成都市武侯区五星路5号</td>
+            <td>天气</td>
+            <td id="accident-weather">晴</td>
+        </tr>
+        <tr>
+            <td colspan="11">当事人基本信息<br>说明:甲、乙代码按车辆在事故现场“右前向后”或者“由左向右”顺序确定</td>
+        </tr>
+        <tr>
+            <td >代码</td>
+            <td >当事人姓名</td>
+            <td >驾驶证号</td>
+            <td >联系方式</td>
+            <td >号牌号码</td>
+            <td style="white-space: nowrap;padding: 0 5px">车辆类型</td>
+            <td >投保公司</td>
+            <td >保险凭证号</td>
+            <td >保险期间</td>
+            <td colspan="2">保险公司报案号</td>
+        </tr>
+        <tr id="table-tr-situationAndResponsibility">
+            <td colspan="11">道路交通事故形态及责任（在□内打√）</td>
+        </tr>
+        <tr id="accident-partslength">
+        </tr>
+        <tr>
+            <td>事故<br/>形态</td>
+            <td colspan="10" id="accident-reasoncate">
+            </td>
+        </tr>
+        <tr id="accident-brokenParts">
+        </tr>
+        <tr id="accident-reason">
+        </tr>
+        <tr id="accident-responsibility">
+        </tr>
+    </table>
+    <p class="foot">以上信息和道路交通事故事实形态如有虚假，由当事人承担法律责任</p>
+    <div id="accident-signature" class="signature-btn">
+        当事人签名：
+        <div id="signatureTime" class="signature-time"></div>
+    </div>
+    <div id="loading" class="loading hide">正在打印</div>
+    <div id="buttongroup" class="close-btn">
+        <button id="printPage">打印</button>
+        <button id="gotoindex" onclick="window.location='/customer/index'">关闭</button>
+    </div>
+</div>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="../../static/script/customer/common.js"></script>
+<script type="text/javascript" src="../../static/script/customer/preview_agreement.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+</body>
+</html>

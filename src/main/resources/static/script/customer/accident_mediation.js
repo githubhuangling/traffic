@@ -1,0 +1,5 @@
+$("#acMedicationCenter").click(function () {
+    popWindow();
+    let html="<div class=\"pop-content\">\n        <div class=\"pop-title\">选择快处中心</div>\n        <ul class=\"kc-center\">\n            <li><input type=\"radio\" name=\"fj-center\" id=\"0\"><label for=\"0\">交警一分局</label></li>\n            <li><input type=\"radio\" name=\"fj-center\" id=\"1\"><label for=\"1\">交警一分局</label></li>\n            <li><input type=\"radio\" name=\"fj-center\" id=\"2\"><label for=\"2\">交警一分局</label></li>\n            <li><input type=\"radio\" name=\"fj-center\" id=\"3\"><label for=\"3\">交警一分局</label></li>\n            <li><input type=\"radio\" name=\"fj-center\" id=\"4\"><label for=\"4\">交警一分局</label></li>\n        </ul>\n        <footer class=\"operation\">\n            <button class=\"sure\">确定</button>\n            <button class=\"cancel\">取消</button>\n        </footer>\n    </div>";
+    $(".pop-window").append(html);
+});

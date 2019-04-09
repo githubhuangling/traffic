@@ -1,0 +1,270 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">保险公司</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                        <label class="col-xs-2 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                        <div class="col-xs-4">
+                            <input id="insuranceCompany-findname" class="form-control" oninput="search();"></input>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="toolbar-insuranceCompany" class="btn-group">
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="refresh();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadAddModal();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadUpdateMoadl();">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span>修改
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="deleteInsuranceCompany();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <table id="table-insuranceCompany"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="modal-insuranceCompany" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">保险公司</h4>
+            </div>
+            <div class="modal-body" id="modal-items">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <button type="button" id="button-insuranceCompany-update" class="btn btn-primary" onclick="updateInsuranceCompany();">
+                    提交更改
+                </button>
+
+                <button type="button" id="button-insuranceCompany-add" class="btn btn-primary" onclick="addInsuranceCompany();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<script>
+
+    $("#table-insuranceCompany").bootstrapTable({ // 对应table标签的id
+        url: "/s/insuranceCompany", // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-insuranceCompany",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        singleSelect: true,//单选
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+            return {
+                size: params.limit,//params.limit, // 每页要显示的数据条数
+                page: (params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'code', // 返回json数据中的code
+                title: '代码', // 表格表头显示文字
+                align: 'left', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'name', // 返回json数据中的name
+                title: '名称', // 表格表头显示文字
+                align: 'left', // 左右居中
+                valign: 'middle' // 上下居中
+            }
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refresh() {//刷新表
+        $("#table-insuranceCompany").bootstrapTable('refresh', {url: '/s/insuranceCompany'});
+    }
+
+    function loadAddModal() {//打开添加，并初始化数据
+        $('#myModalLabel').html('添加');
+        $('#modal-items').empty();
+
+        var itemName = '<div class="input-group">' +
+                       '     <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;代&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+                       '     <input id="input-insuranceCompany-code" type="text" class="form-control" placeholder="">' +
+                       '</div><br>'+
+                       '<div class="input-group">' +
+                       '     <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;名&nbsp;&nbsp;称&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+                       '     <input id="input-insuranceCompany-name" type="text" class="form-control" placeholder="">' +
+                       '</div>';
+
+        $('#modal-items').append(itemName);
+
+        $('#button-insuranceCompany-update').hide();
+        $('#button-insuranceCompany-add').show();
+
+        $('#modal-insuranceCompany').modal('toggle');
+
+    }
+
+    function addInsuranceCompany() {//确定添加
+        var name = $('#input-insuranceCompany-name').val();
+        var code = $.trim($('#input-insuranceCompany-code').val());
+        $.ajax({
+            type: "POST",
+            url: "/s/insuranceCompany/",
+            dataType: "json",
+            data: {name:name,code:code},
+            success: function(data) {
+                if (data.result) {
+                    $("#table-insuranceCompany").bootstrapTable('refresh', {slient:true});
+                    $('#modal-insuranceCompany').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
+
+    function loadUpdateMoadl() {//打开修改框，并初始化数据
+        var row = $("#table-insuranceCompany").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            $('#myModalLabel').html('修改');
+            $('#modal-items').empty();
+
+
+            var itemName = '<div class="input-group">' +
+                           '     <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;代&nbsp;&nbsp;号&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+                           '     <input id="input-insuranceCompany-code" type="text" class="form-control" placeholder="">' +
+                           '</div><br>'+
+                           '<div class="input-group">' +
+                           '     <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;名&nbsp;&nbsp;称&nbsp;&nbsp;&nbsp;&nbsp;</span>' +
+                           '     <input id="input-insuranceCompany-name" type="text" class="form-control" placeholder="">' +
+                           '</div>';
+
+            $('#modal-items').append(itemName);
+
+            $('#input-insuranceCompany-name').val(row[0].name);
+            $('#input-insuranceCompany-code').val(row[0].code);
+
+            $('#button-insuranceCompany-add').hide();
+            $('#button-insuranceCompany-update').show();
+
+
+            $('#modal-insuranceCompany').modal('toggle');
+        } else {
+            alert('请选择要修改的数据');
+        }
+    }
+
+    //修改参数
+    function updateInsuranceCompany() {
+        //获取选择的一条保险公司
+        var row = $("#table-insuranceCompany").bootstrapTable('getSelections');
+        var name= $('#input-insuranceCompany-name').val().trim();
+        var code= $.trim($('#input-insuranceCompany-code').val());
+        var id=row[0].id;
+        $.ajax({
+            type: "PUT",
+            url: "/s/insuranceCompany/"+id,
+            dataType: "json",
+            data: {name:name,code:code},
+            success: function(data) {
+                if (data.result) {
+                    $("#table-insuranceCompany").bootstrapTable('refresh', {slient:true});
+                    $('#modal-insuranceCompany').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+    //删除保险公司
+    function deleteInsuranceCompany(){
+        var row = $("#table-insuranceCompany").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            $.ajax({
+                type: "DELETE",
+                url: "/s/insuranceCompany/"+row[0].id,
+                dataType: "json",
+                success: function(data) {
+                    if (data.result) {
+                        $("#table-insuranceCompany").bootstrapTable('refresh', {slient:true});
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        } else {
+            alert('请选择要删除的数据');
+        }
+    }
+
+
+
+    //带参数查询
+    function search() {
+        $("#table-insuranceCompany").bootstrapTable('refresh', {
+            url: '/s/insuranceCompany',
+            query: {
+                name: $("#insuranceCompany-findname").val()
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>事故信息录入</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/accident_info_upload.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/font_calendar.css"/>
+    <link rel="stylesheet" href="../../static/style/customer/accident_information.css"/>
+</head>
+<body onload="InitCamera();" onunload="UnInitCamOCX();">
+<div class="header">
+    <a href="/customer/index"><img src="../../static/image/customer/icon/home.png"></a>
+    事故信息录入
+    <span id="identity">[当事人：甲方]</span>
+    <div class="case-number">
+        <label for="caseNumber">报案号</label>
+        <input id="caseNumber" type="tel" placeholder="请输入报案号"/>
+    </div>
+</div>
+<div class="main">
+    <div class="mask hide"></div>
+    <ul class="information">
+        <li>
+            <div class="title">驾驶人信息</div>
+            <div class="details">
+                <div class="id-card">
+                    <img src="../../static/image/customer/icon/card.gif"/>
+                    <p style="font-size:20px;">放入身份证</p>
+                </div>
+                <ul class="id-details">
+                    <li>
+                        <label for="idCard">证件号码</label>
+                        <input id="idCard" style="letter-spacing: -0.7px;" maxlength="18" type="tel" placeholder="身份证放入读卡区或输入身份证号码"/>
+                    </li>
+                    <li>
+                        <label for="uName">姓名</label>
+                        <input id="uName" class="uname" type="text" style="position:relative;display: inline-block" placeholder=""/>
+                        <span class="load"></span>
+                        <span id="helpMsg" class="help-msg"></span>
+                    </li>
+                    <li>
+                        <label for="phone">联系电话</label>
+                        <input id="phone" type="tel" maxlength="11" placeholder="请输入手机号码"/>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="accident-details">
+            <div class="title">事故车辆录入</div>
+            <div class="details">
+                <ul class="id-details">
+                    <li>
+                        <label for="species">号牌种类</label>
+                        <select name="species" class="species" id="species"></select>
+                    </li>
+                    <li style="position:relative;">
+                        <label for="license">车牌号码</label>
+                        <input type="text" id="license" class="license" value="川A" placeholder="请输入车牌号码"/>
+                        <button class="search ">查询</button>
+                        <span></span>
+                    </li>
+                    <li style="position:relative">
+                        <label for="carName">车主姓名</label>
+                        <input id="carName"  class="car-name" type="text" placeholder=""/>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="accident-details">
+            <div class="title">投保公司信息</div>
+            <div class="details">
+                <ul class="id-details">
+                    <li>
+                        <label>投保公司</label>
+                        <select name="" class="species" id="insurance"></select>
+                    </li>
+                    <li>
+                        <label for="InsurancePolicyNo">保单号</label>
+                        <input type="text" id="InsurancePolicyNo" class="car-name" placeholder="请输入保险凭证号"/>
+                    </li>
+                    <li>
+                        <label for="carName">保险期间</label>
+                        <!--<input  class="car-name" type="text" placeholder="请输入保险期间"/>-->
+                        <div class="ac-date-box">
+                            <input type="text" placeholder="请选择日期" id='h3Ele' readonly onfocus="this.blur()" class="ac-date"/>
+                            <span class="calendar"></span>
+                            <div id='schedule-box' class="boxshaw hide"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <div class="key">
+        <ul class="hide key-number"></ul>
+        <ul class="hide key-phone"></ul>
+        <div class="hide key-car-all key-car-number">
+            <ul class="key-car-word hide key-car-number"></ul>
+            <ul class="key-car-litter key-car-number"></ul>
+            <ul class="key-car-no key-car-number"></ul>
+        </div>
+        <div class="hide insurance-policy-no">
+            <ul class="key-car-litter"></ul>
+            <ul class="key-car-no"></ul>
+        </div>
+        <div class="hide key-case-number">
+            <ul class="key-case-litter"></ul>
+            <ul class="key-case-no"></ul>
+        </div>
+    </div>
+    <div>
+        <script type="text/javascript">
+            var pageindex = 1;
+
+            function InitCamera() {
+                setTimeout(function() {InitCamOCX();}, 2000);//SetImageCusCropRect()
+            }
+
+
+
+            /**********请求成功的回调函数*********/
+            function success_cameraCallback(data) {
+                // alert(data);
+                var ss = location.href.split("/");
+                if (pageindex == 1) {
+                    $("#driverUrl").attr("src",  data);
+                    setTimeout(canNext(),2000);
+                } else {
+                    $("#drivingUrl").attr("src",  data);
+                     setTimeout(canNext(),2000);
+                }
+                $("#driverUrl").attr("onclick", "takePhoto(1)");
+                $("#driverUrlp").attr("onclick", "takePhoto(1)").removeClass("disable-click");
+                $("#drivingUrl").attr("onclick", "takePhoto(2)");
+                $("#drivingUrlp").attr("onclick", "takePhoto(2)").removeClass("disable-click");
+            }
+
+            /*************请求失败的回调函数*************/
+            function error_cameraCallback(data) {
+            		layer.alert(data);
+                if (pageindex == 1) {
+                    $("#driverUrl").attr("src", "../../static/image/customer/icon/bg_id.png");
+                } else {
+                    $("#drivingUrl").attr("src", "../../static/image/customer/icon/bg_id.png");
+                }
+                $("#driverUrl").attr("onclick", "takePhoto(1)");
+                $("#driverUrlp").attr("onclick", "takePhoto(1)").removeClass("disable-click");
+                $("#drivingUrl").attr("onclick", "takePhoto(2)");
+                $("#drivingUrlp").attr("onclick", "takePhoto(2)").removeClass("disable-click");
+            }
+
+
+                function takePhoto(index) {
+                // onload ="InitCamOCX();" onunload = "UnInitCamOCX();"
+
+                pageindex = index;
+                var files = Capture();
+                var strs = files.split(";"); //字符分割
+                //var ss = location.href.split("/");
+                //alert(ss[0]+"//"+ss[2]+"/customer/upload/uploadFile");return;
+                //CamSDKOCX.ShowImage(strs[0]);
+                if (pageindex == 1) {
+                    $("#driverUrl").attr("src", "../../static/image/customer/icon/bg_img.gif");
+                    $("#driverUrl").attr("onclick", "null");
+                    $("#driverUrlp").attr("onclick", "null").addClass("disable-click");
+                    $("#drivingUrl").attr("onclick", "null");
+                    $("#drivingUrlp").attr("onclick", "null").addClass("disable-click");
+                } else {
+                    $("#drivingUrl").attr("src", "../../static/image/customer/icon/bg_img.gif");
+                    $("#driverUrl").attr("onclick", "null");
+                    $("#driverUrlp").attr("onclick", "null").addClass("disable-click");
+                    $("#drivingUrl").attr("onclick", "null");
+                    $("#drivingUrlp").attr("onclick", "null").addClass("disable-click");
+                }
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = "http://127.0.0.1:9999/ae0c6017d105b4ce/upload?t=" + (new Date().getTime()) +
+                             "&callbackparam=success_cameraCallback&fileUrl=" + encodeURIComponent(strs[0]);
+                document.body.appendChild(script);
+                //   		    	   var ret = CamSDKOCX.UpdataFileHttp("http://127.0.0.1:9999/ae0c6017d105b4ce/upload","fileUrl="+strs[0]);
+                //   		    	   alert(ret);
+            }
+        </script>
+        <ul class="photos">
+            <li style="position: relative;">
+                <input id="photo1" type="file" class="ac-file" style="display: none;"/>
+                <img onclick="" id="driverUrl" style="height: 100%;" class="upload-photo-l-img"
+                     src="../../static/image/customer/icon/bg_id.png"/>
+                <p id="driverUrlp" class="disable-click" onclick="" style="position: absolute;top: 85%;left: 25%;">点击拍摄驾驶证照片</p>
+                <div class="upload-photo-tip-l hide">请上传驾驶证照片</div>
+            </li>
+            <li>
+                <OBJECT style="position: relative;top: 0;left: -150px;" id="CamSDKOCX" width="100%" height="100%"
+                        classid="clsid:556DBC8A-FE4A-4DA7-A82E-3926C8D4AC41"></OBJECT>
+            </li>
+            <li style="position: relative;">
+                <input id="photo2" type="file" class="ac-file ac-file-right" style="display: none;"/>
+                <img onclick="" id="drivingUrl" style="height: 100%;" class="upload-photo-r-img"
+                     src="../../static/image/customer/icon/bg_id.png"/>
+                <p id="drivingUrlp" class="disable-click" onclick="" style="position: absolute;top: 85%;left: 25%;">点击拍摄行驶证照片</p>
+                <div class="upload-photo-tip-r hide">请上传行驶证照片</div>
+            </li>
+        </ul>
+        <!-- <ul class="photos">
+            <li>
+                <input type="file" class="ac-file"/>
+                <img id="driverUrl" class="upload-photo-l-img" src="../../static/image/customer/icon/bg_id.png"/>
+                <p>驾驶证照片</p>
+                <div class="upload-photo-tip-l hide">请上传驾驶证照片</div>
+            </li><li>
+                <input type="file" class="ac-file ac-file-right"/>
+                <img id="drivingUrl" class="upload-photo-r-img" src="../../static/image/customer/icon/bg_id.png"/>
+                <p>行驶证照片</p>
+                <div class="upload-photo-tip-r hide">请上传行驶证照片</div>
+            </li>
+        </ul> -->
+    </div>
+    <div class="footer">
+        <a href="javascript:;" id="next" class="disable-href">录入乙方</a>
+        <a id="finish" class="hide disable-href">完成采集</a>
+    </div>
+</div>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/libs/device/idcard/socket.io.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="../../static/script/customer/common.js"></script>
+<script type="text/javascript" src="../../static/script/customer/accident_information.js"></script>
+<script type="text/javascript" src="../../static/script/customer/accident_camocx.js"></script>
+<script type="text/javascript" src="../../static/libs/device/idcard/read.js"></script>
+
+
+<!----------------------------------------------------下在是高拍仪的内容，勿删------------------------------------------------------------->
+<table width="100%" height="100%" style="display: none;">
+    <tr width="100%" height="100%">
+        <!--左列-->
+        <td width="40%" height="100%">
+            <table width="100%" height="60%">
+                <tr height="20">
+                </tr>
+                <tr>
+                    <td colspan="5" height="100%">
+
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" height="30%">
+
+                <tr height="40">
+                    <td width="100">预览缩放：</td>
+                    <td colspan="4">
+                        <input type="button" value="+" onClick="ZoomIN()"
+                               style="margin-left:5; width:20%; text-align:center" ;>
+                        <input type="button" value="-" onClick="Zoomout()"
+                               style="margin-left:5; width:20%; text-align:center">
+                        <input type="button" value="1:1" onClick="OriginalPreview()"
+                               style="margin-left:5; width:20%; text-align:center">
+                        <input type="button" value="best" onClick="OptimalPreview()"
+                               style="margin-left:5; width:20%; text-align:center">
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td colspan="5">设备控制/参数设置：</td>
+                </tr>
+                <tr height="40">
+                    <td colspan="3" width="60%">
+                        设备：
+                        <select name="DeviceList" id="DeviceList" onchange="ChangeDevice()" style=" width:60%"></select>
+                    </td>
+                    <td colspan="2" width="40%">
+                        <input type="button" value="设备设置" onClick="ShowDevSettingWindow()"
+                               style="width:80; text-align:center">
+                        <input type="button" value="图像设置" onClick="ShowImageSettingWindow()"
+                               style="margin-left:5; width:80; text-align:center">
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td width="40%" colspan="2">
+                        视频格式:
+                        <select name="MediaType" id="MediaType" onchange="SetMediaType(MediaType)"
+                                style="width:60%"></select></td>
+                    <td width="60%" colspan="3">
+                        分辨率：
+                        <select name="Resolution" id="Resolution" onchange="SetResolution(Resolution)"
+                                style="width:60%"></select></td>
+                </tr>
+                <tr height="40">
+                    <td colspan="5">
+                        <input type="button" value="蜂鸣" onClick="EnableBuzzer()" style="width:80; text-align:center">
+                        <input type="button" value="一键对焦" onClick="AutoFocus()" style="width:80; text-align:center">
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" height="10%">
+            </table>
+        </td>
+        <!--右列-->
+        <td width="40%" height="100%">
+            <table width="100%" height="10%">
+                <tr height="20">
+                </tr>
+                <tr height="40">
+                    <td width="80">
+                        存储路径：
+                    </td>
+                    <td>
+                        <input style="width:100%" type="text" name="path" id="path" value="C:\temp"
+                               onchange="SetSaveFolder()">
+                    </td>
+                    <td>
+                        <a id="saveFolder" style="width:60;" href="C:\temp">openFolder</a>
+                    </td>
+                    <td width="125">
+                        <!--
+                        <input type = "button" value = "浏览" onClick="browseFolder('path')" style = "width:60; text-align:center">
+                        <input type = "button" value = "打开" onClick="()" style = "width:60; text-align:center">
+                            -->
+                    </td>
+
+                </tr>
+            </table>
+            <table width="100%" height="60%">
+                <tr height="40">
+                    <td colspan="6">
+                        拍照（图像处理）：
+                    </td>
+                </tr>
+                <tr height="40">
+
+                    <td>颜色类型：
+                        <select style="width:90;" name="colorstyle" id="colorstyle"
+                                onchange="SetColorStyle(colorstyle)">
+                            <option value="0">彩色</option>
+                            <option value="1">灰度</option>
+                            <option value="2">黑白</option>
+                        </select>
+                    </td>
+                    <td>PS 特 效:
+                        &nbsp&nbsp
+                        <select style="width:90;" name="PS" id="PS" onchange="SetAdjust(PS)">
+                            <option value="0">无效果</option>
+                            <option value="1">文档增强</option>
+                            <option value="2">色彩增强</option>
+                            <option value="4">灰色(Gray)</option>
+                            <option value="5">黑白(Black & White)</option>
+                            <option value="6">油画(Painterly)</option>
+                            <option value="7">怀旧(Nostalgic)</option>
+                            <option value="8">素描(Sketch)</option>
+                            <option value="9">边缘照亮(Glowing Edge)</option>
+                            <option value="10">蓝冷(Cold Blue)</option>
+                            <option value="11">马赛克(Mosaic)</option>
+                            <option value="12">模糊(Blurry)</option>
+                            <option value="13">负片(Negative)</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr height="40">
+                    <td>图像类型：
+                        <select style="width:90;" name="filetype" id="filetype" onchange="">
+                            <option value=".jpg">jpg</option>
+                            <option value=".bmp">bmp</option>
+                            <option value=".png">png</option>
+                            <option value=".tif">tif</option>
+                            <option value=".ico">ico</option>
+                            <option value=".pdf">pdf</option>
+                        </select>
+                    </td>
+                    <td>JPG 质量：
+                        <input type="text" style="width:90;" name="JPGQ" id="JPGQ" value=" 75"
+                               onchange="SetJPGQuanlity(JPGQ)"/>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr height="40">
+                    <td>裁切类型：
+                        <select style="width:90;" name="autocrop" id="autocrop" onchange="SetAutoCrop(autocrop)">
+                            <option value="0">不裁切</option>
+                            <option value="1">单图裁切</option>
+                            <option value="2">多图裁切</option>
+                            <option value="3">单图裁切 & 补边</option>
+                        </select>
+                    </td>
+                    <td>旋转类型：
+                        <select style="width:90;" name="rotate" id="rotate" onchange="SetRotateState(rotate)">
+                            <option value="0">0度</option>
+                            <option value="1">90度</option>
+                            <option value="2">180度</option>
+                            <option value="3">270度</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+                <td colspan="4">
+                    PS: 手动裁切有两个接口可开启。其中一个可设置区域位置，有效值范围1~100。如左上设置为10，左顶的坐标即为 x=视频宽*10%，y=视频高*10%
+                </td>
+                </tr>
+                <tr rowspan="2" height="40">
+                    <td width="80">
+                        <input type="checkbox" name="CurCrop" id="CurCrop" onClick="SetCusCrop(CurCrop)"/>
+                        手动裁切
+                    </td>
+                    <td colspan="3">
+                        左：<input style="width:40;" type="text" name="leftValue" id="leftValue" value="0"/>
+                        上：<input style="width:40;" type="text" name="topValue" id="topValue" value="20"/>
+                        右：<input style="width:40;" type="text" name="rightValue" id="rightValue" value="83"/>
+                        下：<input style="width:40;" type="text" name="bottomValue" id="bottomValue" value="50"/>
+                        &nbsp&nbsp<input type="button" value="设置手裁框" onClick="SetImageCusCropRect()"
+                                         style="width:100; text-align:center">
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td colspan="4" width="80">DPI:
+                        &nbsp&nbsp&nbsp&nbsp
+                        X:<input style="width:40;" type="text" name="xdpi" id="xdpi" value="0"
+                                 onchange="SetImageDPI()"/>
+                        &nbsp&nbsp&nbsp&nbsp
+                        Y:<input style="width:40;" type="text" name="ydpi" id="ydpi" value="0"
+                                 onchange="SetImageDPI()"/>
+                    </td>
+                </tr>
+                <tr rowspan="2" height="40">
+                    <td>
+                        <input type="checkbox" name="Denoise" id="Denoise" onClick="SetDenoise(Denoise)"/>
+                        去噪
+                    </td>
+                    <td>
+                        <input type="checkbox" name="ImageFileSign" id="ImageFileSign"
+                               onClick="SetImageFileSign(ImageFileSign)"/>
+                        防篡改
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="button" value="图片验证" style="margin-left:5px" onclick="CheckImageFileSign()">
+                        <input type="file" name="CheckFile" id="CheckFile" value="选取文件">
+                    </td>
+                </tr>
+                <tr colspan="2">
+                    <td>
+                        <input type="button" value="拍照" onClick="Capture()" style="width:60; text-align:center">
+                        <input type="button" value="拍照（显示）" onClick="CaptureShow()"
+                               style="width:100; text-align:center">
+                    </td>
+                    <td width=120>
+                        <input type="button" value="拍照（base64）" onClick="CaptureBase64()"
+                               style="width:120; text-align:center">
+                        <input type="button" value="条码识别" onClick="CaptureBarcode()"
+                               style="width:100; text-align:center">
+                    </td>
+                    <td>
+                        <img ID="imgPreview" src="" border="1" width="100" height="100"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="button" value="自动连拍" onClick="AutoCapture(0)" style="width:80; text-align:center">
+                        <input type="button" value="定时连拍" onClick="AutoCapture(1)" style="width:80; text-align:center">
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" height="30%">
+                <tr height="40">
+                    <td colspan="2">
+                        录像：
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td width="50%">
+                        麦克风：
+                        <select name="AudioList" id="AudioList" style=" width:60%"></select>
+                    </td>
+                    <td>
+                        录像格式：
+                        <select name="RecordType" id="RecordType" style=" width:60%">
+                            <option value=".avi">avi</option>
+                            <option value=".mp4">mp4</option>
+                            <option value=".flv">flv</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td colspan="2">
+                        音量：
+                        <input style="width:180;" type="text" name="volume" id="volume" value="录像时当前音量"/>
+                    </td>
+                </tr>
+                <tr height="40">
+                    <td colspan="2">
+                        <input type="button" value="开始录像" onClick="StartRecord()" style="width:80; text-align:center">
+                        <input type="button" value="停止录像" onClick="StopRecord()" style="width:80; text-align:center">
+                    </td>
+                </tr>
+                <tr>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr height="200">
+        <td colspan="6">
+			<textarea id="Msg" style="width:100%;height:100%;">
+			</textarea>
+        </td>
+    </tr>
+</table>
+
+<script type="text/JavaScript" for="CamSDKOCX" event="AutoCaptureImage(acPath)">
+    //alert(acPath);
+    //AutoCaptureImage(state);
+    var Ret = "[" + (++countImage) + "]- " + acPath + "\r\n";
+    Msg.value = Ret + Msg.value;
+</script>
+<script type="text/JavaScript" for="CamSDKOCX" event="KeyDevState(state)">
+    //alert(state);
+    //AutoCaptureImage(state);
+    var Ret = "[" + (++countImage) + "]- " + state + "\r\n";
+    Msg.value = Ret + Msg.value;
+</script>
+<script type="text/javascript" src="../../static/libs/schedule/schedule.js"></script>
+<script type="text/javascript">
+    var mySchedule = new Schedule({
+        el: '#schedule-box',
+        //date: '2018-9-20',
+        clickCb: function(y, m, d) {
+            // var typeinDate=new Date(y, m-1, d);
+            // var nowDate=new Date();
+            // var todayEnd=new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate()+1);
+            // if (typeinDate>=todayEnd) {
+            //     alert('请选择正确的日期');
+            //     return false;
+            // }s
+
+            document.querySelector('#h3Ele').value = y + '-' + m + '-' + d;
+            canNext();
+        },
+        nextMonthCb: function(y, m, d) {
+            document.querySelector('#h3Ele').value = y + '-' + m + '-' + d;
+        },
+        nextYeayCb: function(y, m, d) {
+            document.querySelector('#h3Ele').value = y + '-' + m + '-' + d;
+        },
+        prevMonthCb: function(y, m, d) {
+            document.querySelector('#h3Ele').value = y + '-' + m + '-' + d;
+        },
+        prevYearCb: function(y, m, d) {
+            document.querySelector('#h3Ele').value = y + '-' + m + '-' + d;
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="box">
+			<div class="box-header">
+				<h3 class="box-title">系统操作员角色</h3>
+			</div>
+
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div id="toolbar-sysrole" class="btn-group">
+					<button  type="button" class="btn btn-default toolbar-btn" onclick="refreshSysrole();">
+						<span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+					</button>
+					<button  type="button" class="btn btn-default toolbar-btn" onclick="loadSysroleUpdate();">
+						<span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span>修改
+					</button>
+					<button  type="button" class="btn btn-default toolbar-btn" onclick="loadSysroleAdd();">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+					</button>
+					<button  type="button" class="btn btn-default toolbar-btn" onclick="loadSysroleDelete();">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+					</button>
+				</div>
+				<table id="table-sysrole"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- 修改添加模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" >操作</h4>
+			</div>
+			<div class="modal-body">
+				<form class="bs-example bs-example-form">
+					
+					<div class="input-group">
+						<span class="input-group-addon">
+							&nbsp;&nbsp;&nbsp;名&nbsp;&nbsp;&nbsp;称 &nbsp;&nbsp;&nbsp;</span> <input
+							id="input-name" type="text" class="form-control">
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">
+							&nbsp;&nbsp;&nbsp;备&nbsp;&nbsp;&nbsp;注 &nbsp;&nbsp;&nbsp;</span> <input
+							id="input-remark" type="text" class="form-control">
+					</div>
+					<br>
+				</form>
+				<h4>权限管理</h4>
+				<div class="row" id="box-Authority">
+				  <div class="col-sm-4 " >
+					 <div class="my-checkbox checkbox-default">
+					        <input type="checkbox" id="RememberMe1">
+					            <label for="RememberMe1">Remember Me</label>
+					    </div>
+					</div>
+					<div class="col-sm-4 ">
+					    <div class="my-checkbox checkbox-default">
+					        <input type="checkbox" id="RememberMe2">
+					            <label for="RememberMe2">系统操作员角色管理</label>
+					    </div>
+					</div>
+					<div class="col-sm-4 ">
+					    <div class="my-checkbox checkbox-default">
+					        <input type="checkbox" id="RememberMe3">
+					            <label for="RememberMe3">Remember Me</label>
+					    </div>
+					</div> 
+				</div>
+				
+			</div><br>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary"
+					id="btn-sysrole-update">提交更改</button>
+				<button type="button" class="btn btn-primary"
+					id="btn-sysrole-add">确认</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal -->
+</div>
+
+
+
+
+
+
+
+<script>
+
+	
+
+	
+	//初始化表格
+	$("#table-sysrole").bootstrapTable({ // 对应table标签的id
+	    url: "/s/sysrole/person/findAll", // 获取表格数据的url
+	    method: 'get',
+	    toolbar: '#toolbar-sysrole', //工具按钮容器
+	    contentType : "application/x-www-form-urlencoded",
+	    dataType: 'json',
+	    singleSelect: true,//单选
+	    toolbar : "#toolbar-sysrole",
+	    toolbarAlign: 'right',
+	    cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+	    striped: true,  //表格显示条纹，默认为false
+	    pagination: true, // 在表格底部显示分页组件，默认false
+	    pageSize: 20, // 页面数据条数
+	    pageList: [5, 10, 15, 20], // 设置页面可以显示的数据条数
+	    pageNumber: 1, // 首页页码
+	    pagination:true,//是否分页
+	    sidePagination : "server",  // 设置为服务器端分页 
+	    queryParams: function (params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+	
+	        return {
+	            size: params.limit,//params.limit, // 每页要显示的数据条数
+	            page: (params.offset/params.limit)+1, // 当前页
+	        }
+	    },
+	    /* sortName: 'name', // 要排序的字段
+	    sortOrder: 'desc', // 排序规则 */
+	    columns: [
+			 {  
+                checkbox: true  
+            },{
+	            field: 'name', // 返回json数据中的name
+	            title: '名称', // 表格表头显示文字
+	            align: 'center', // 左右居中
+	            valign: 'middle' // 上下居中
+	        }, {
+	            field: 'remark',
+	            title: '备注',
+	            align: 'center',
+	            valign: 'middle'
+            	
+	        }
+            	
+	        
+	    ],
+	    responseHandler:function(res){
+	    	
+	    	return {total:res.content.totalElements,rows:res.content.content};
+	    },
+	    onLoadSuccess: function(){  //加载成功时执行
+	    	//禁用全选
+	    	$("input[name='btSelectAll']").attr("hidden","true");
+	          console.info("加载成功");
+	    },
+	    onLoadError: function(){  //加载失败时执行
+	          console.info("加载数据失败");
+	    },
+	  	
+	    //单击选中
+	    onClickRow: function(row, $element){
+	    	$($element.children()[0]).children().click();
+	    }
+	    
+	
+	});
+	
+	
+	
+	//刷新表
+	function refreshSysrole(){
+		$("#table-sysrole").bootstrapTable('refresh', {url: '/s/sysrole/person/findAll'});  
+		
+	}
+	//打开操作员框，并填入数据
+	function loadSysroleShow(){
+		$('#showperson').modal('toggle');
+		
+	}
+	//打开添加框，并初始化
+	function loadSysroleAdd(){
+		$('#btn-sysrole-add').show();
+		$('#btn-sysrole-update').hide();
+		$('#input-name').attr('placeholder',"");
+		$('#input-remark').attr('placeholder',"");
+		$('#input-name').val('');
+    	$('#input-remark').val('');
+    	$('#myModal').modal('toggle');
+    	
+    	$('#box-Authority').empty();
+    	getMenuList();
+    	
+    	
+	}
+	//提交添加
+	function addSysrole(){
+		//给模态框绑定显示和隐藏效果
+    	$('#myModal').modal('toggle');
+		
+		//获取添加框中各值
+		var name=$('#input-name').val();
+		var remark=$('#input-remark').val();
+		if(name==""||remark==""){
+			alert("不能为空");
+			return;
+		}
+		var menuIds="";
+		for(i=0;i<$('#box-Authority input[type=checkbox]:checked').length;i++){
+			var newmenuId=$($('#box-Authority input[type=checkbox]:checked')[i]).attr('menuId');
+			
+			menuIds=menuIds+","+newmenuId;
+		}
+		menuIds=menuIds.substr(1);
+		
+		var role={name:name,remark:remark,menuIds:menuIds};
+		$.ajax({
+			type:"get",
+			url:"/s/sysrole/person/add",
+			data:role,
+			dataType:"json",
+			success:function(data){
+				if(data.success){
+					$('#myModal').modal('hide');
+					$("#table-sysrole").bootstrapTable('refresh', {url: "/s/sysrole/person/findAll"});
+				}
+			}
+		});
+		
+	}
+	
+	
+	
+	//打开修改框，并初始化
+	var toUpdateRoleId
+	function loadSysroleUpdate(){
+		
+		
+		$('#btn-sysrole-add').hide();
+		$('#btn-sysrole-update').show();
+		//清除模态框旧数据
+    	$('#input-name').val('');
+    	$('#input-remark').val('');
+    	var row=$("#table-sysrole").bootstrapTable('getSelections');
+		if(row.length==1){
+			//给模态框绑定显示和隐藏效果
+        	$('#myModal').modal('toggle');
+			toUpdateRoleId=row[0].id;
+			
+	    	//获取行数据，填入模态框
+	    	$('#input-name').attr('placeholder',row[0].name);
+	    	$('#input-remark').attr('placeholder',row[0].remark);
+	    	
+	    	//获取所以menus
+	    	$('#box-Authority').empty();
+	    	//从后台获取menus
+			$.ajax({
+				type:"get",
+				url:"/s/sysrole/person/findAllMenu",
+				dataType:"json",
+				complete:selecteMenus,
+				success:function(data){
+						if(data.success){
+							for(var i=0;i<data.content.length;i++){
+								var div='<div class="col-sm-4 "> '
+									+'<div class="my-checkbox checkbox-default">'
+										+'<input  type="checkbox" name="Authority" id="Authority-sysrole-'+data.content[i].id+'" menuId="'+data.content[i].id+'">'
+										+'<label for="Authority-sysrole-'+data.content[i].id+'">'+data.content[i].name+'</label>'
+									+'</div>'
+								+'</div>';
+								$('#box-Authority').append(div);
+							}
+						}else{
+							alert("获取权限列表失败");
+						}
+				}
+					
+			});
+	    	
+	    	
+   			//获取该角色拥有的menus并选中
+   			function selecteMenus(){
+       			var roleId=row[0].id;
+	       		$.ajax({
+	       			type:"get",
+	       			url:"/s/sysrole/person/findById",
+	       			data:{id:roleId},
+	       			dataType:"json",
+	       			success:function(data){
+	       				if(data.success){
+	       					for(var i=0;i<data.menuids.length;i++){
+	       						var ids=data.menuids[i];
+	       						if(true){
+	       							$('#Authority-sysrole-'+ids).click();
+	       						}
+	       						
+	       					}
+	       				}
+	       			}
+	       		});
+   			}
+	    	
+			
+		}else{
+			alert('请选择要修改的角色');
+			return;
+		}
+    	
+	}
+	
+	
+	//确定按钮绑定事件
+	$('#btn-sysrole-update').click(updateSysrole);
+	$('#btn-sysrole-add').click(addSysrole);
+	
+	
+	
+	function updateSysrole(){ 
+		//获取修改框中各值
+		var name=$('#input-name').val();
+		var remark=$('#input-remark').val();
+		
+		var menuIds="";
+		for(i=0;i<$('#box-Authority input[type=checkbox]:checked').length;i++){
+			var newmenuId=$($('#box-Authority input[type=checkbox]:checked')[i]).attr('menuId');
+			menuIds=menuIds+","+newmenuId;
+		}
+		menuIds=menuIds.substr(1);
+		
+		var id=toUpdateRoleId;
+		var role={id:id,name:name,remark:remark,menuIds:menuIds};
+		$.ajax({
+			type:"get",
+			url:"/s/sysrole/person/update",
+			data:role,
+			dataType:"json",
+			success:function(data){
+				
+				if(data.success){
+					$('#myModal').modal('hide');
+					$("#table-sysrole").bootstrapTable('refresh', {url: "/s/sysrole/person/findAll"});
+				}
+			}
+		});
+		
+		
+	}
+	
+	function loadSysroleDelete(){
+		var row=$("#table-sysrole").bootstrapTable('getSelections');
+		if(row.length==1){
+			toDeleteRoleId=row[0].id;
+			$.ajax({
+				type:"get",
+				url:"/s/sysrole/person/deleteById",
+				data:{toDeleteRoleId:toDeleteRoleId},
+				dataType:"json",
+				success:function(data){
+					if(data.success){
+						alert("删除成功");
+						$("#table-sysrole").bootstrapTable('refresh', {url: "/s/sysrole/person/findAll"});
+					}
+				}
+			});
+		}else{
+			alert('请选择要删除的数据');
+			return;
+		}
+	}
+	
+	
+	function getMenuList(){
+		//从后台获取menus
+		$.ajax({
+			type:"get",
+			url:"/s/sysrole/person/findAllMenu",
+			dataType:"json",
+			success:function(data){
+					if(data.success){
+						for(var i=0;i<data.content.length;i++){
+							var div='<div class="col-sm-4 "> '
+											+'<div class="my-checkbox checkbox-default">'
+												+'<input  type="checkbox" name="Authority" id="Authority-sysrole-'+data.content[i].id+'" menuId="'+data.content[i].id+'">'
+												+'<label for="Authority-sysrole-'+data.content[i].id+'">'+data.content[i].name+'</label>'
+											+'</div>'
+										+'</div>';
+										
+							
+									$('#box-Authority').append(div);
+						}
+					}else{
+						alert("获取权限列表失败");
+					}
+			}
+				
+		});
+	}
+	
+	
+	
+</script>
+
+
+
+
+
+
+
+

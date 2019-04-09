@@ -1,0 +1,373 @@
+<div class="row">
+    <div class="col-md-2">
+
+
+        <div class="box box-solid">
+            <div class="box-header with-border" style="text-align: center;">
+                <h3 class="box-title">字典菜单</h3>
+
+
+                <!-- <div class="box-tools btn-group">
+                   <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                     <i class="fa fa-align-justify"></i>
+                     <span class="sr-only">Toggle Dropdown</span>
+                   </button>
+                   <ul class="dropdown-menu" role="menu" id="ul-cates-menu">
+                     <li data-toggle="modal" data-target="#modal-cate" onclick="initAddCateModal();"><a href="#"><i class="fa fa-plus"></i>新建</a></li>
+                     <li data-toggle="modal" data-target="#modal-cate" onclick="initUpdateCateModal();"><a href="#"><i class="fa fa-pencil"></i>修改</a></li>
+                     <li data-toggle="modal" data-target="#modal-cate" onclick="initDeleteCateModal();"><a href="#"><i class="fa fa-close"></i>删除</a></li>
+                   </ul>
+                 </div> -->
+            </div>
+            <div class="box-body no-padding">
+                <ul class="nav nav-pills nav-stacked" id="ul-cates">
+                </ul>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /. box -->
+
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-10">
+        <div class="box box-primary" id="box-dic">
+            <div class="box-header with-border">
+                <h3 class="box-title">字典</h3>
+
+                <!-- <div class="box-tools pull-right">
+                  <div class="has-feedback">
+                    <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                  </div>
+                </div> -->
+                <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+                <div class="mailbox-controls" style="text-align: right;" id="div-dic-tools">
+
+                    <button type="button" class="btn btn-default btn-sm" onclick="refreshTable();"><i
+                            class="fa fa-refresh"></i> &nbsp;刷新
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="addDictionary();"><i
+                            class="fa fa-plus"></i> &nbsp;增加
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="updateDictionary();"><i
+                            class="fa fa-pencil"></i> &nbsp;修改
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="deleteDictionary();"><i
+                            class="fa fa-close"></i> &nbsp;删除
+                    </button>
+
+                    <!-- /.pull-right  data-toggle="modal" data-target="#modal-dictionary" -->
+                </div>
+                <div class="table-responsive mailbox-messages" id="div-dictionaryTable">
+                    <table id="table-sysDictionary"></table>
+                </div>
+                <!-- /.mail-box-messages -->
+            </div>
+            <!-- /.box-body -->
+
+        </div>
+        <!-- /. box -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<!-- cate模态框 -->
+<!-- <div class="modal fade" id="modal-cate">
+ <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span></button>
+       <h4 class="modal-title" id="modal-cate-methodName"></h4>
+     </div>
+     <div class="modal-body" id="modal-body-cate">
+       <p>One fine body&hellip;</p>
+     </div>
+     <div class="modal-footer">
+       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+       <button type="button" class="btn btn-primary" id="modal-cate-action"></button>
+     </div>
+   </div>
+   /.modal-content
+ </div>
+ /.modal-dialog
+</div> -->
+
+<!-- dictionary模态框 -->
+<div class="modal fade" id="modal-dictionary">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-dictionary-methodName"></h4>
+            </div>
+            <div class="modal-body" id="modal-body-dictionary">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="modal-dictionary-action"></button>
+            </div>
+        </div>
+        /.modal-content
+    </div>
+    /.modal-dialog
+</div>
+
+
+<script>
+    //加载字典类型表
+    loadCates();
+
+    function loadCates() {
+        $.ajax({
+            type: "get",
+            url: "/s/sysDictionary/person/getSysDictionaryCate",
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    var cates = data.content;
+                    $('#ul-cates').empty();
+                    for (var i = 0; i < cates.length; i++) {
+                        var li = '<li class="li-cate" cateCode="' + cates[i].code +
+                                 '"><a href="#"><i class="fa  fa-circle-o"></i>' + cates[i].name + '</a></li>';
+
+                        $('#ul-cates').append(li);
+                    }
+                    if (cates.length > 0) {
+                        $('#ul-cates li')[0].click();
+                    }
+                } else {
+                    alert('获取字典类别失败');
+                }
+            }
+        });
+    }
+
+    //监听菜单点击事件
+    $('#ul-cates').on('click', 'li', function() {
+        $('#ul-cates li').removeClass("active");
+        $('#div-dictionaryTable').empty();
+        $('#div-dictionaryTable').append('<table id="table-sysDictionary"></table>');
+        $(this).addClass("active");
+        listDictionaryByCate({'cateCode': $(this).attr('cateCode')});
+
+    });
+
+    //加载dictionary
+    function loadDictionary(data) {
+        var opt = {
+            url: "/s/sysDictionary/person/getSysDictionaryByCate",
+            silent: true,
+            query: {
+                cateCode: data.cateCode
+            }
+
+        };
+        $("#table-sysDictionary").bootstrapTable('refresh', opt);
+    }
+
+    function listDictionaryByCate(data) {
+        $("#table-sysDictionary").bootstrapTable({ // 对应table标签的id
+            url: "/s/sysDictionary/person/getSysDictionaryByCate", // 获取表格数据的url
+            method: 'get',
+            contentType: "application/x-www-form-urlencoded",
+            dataType: 'json',
+            toolbar: "#toolbar-dictionary",
+            toolbarAlign: 'left',
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            pagination: true, // 在表格底部显示分页组件，默认false
+            singleSelect: true,//单选
+            pageSize: 20, // 页面数据条数
+            pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+            pageNumber: 1, // 首页页码
+            pagination: true,//是否分页
+            sidePagination: "server",  // 设置为服务器端分页
+            queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+
+                return {
+                    size: params.limit,//params.limit, // 每页要显示的数据条数
+                    page: (params.offset / params.limit) + 1, // 当前页
+                    cateCode: data.cateCode
+                };
+            },
+            //sortName: 'code', // 要排序的字段
+            //sortOrder: 'desc', // 排序规则
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    field: 'name', // 返回json数据中的name
+                    title: '名称', // 表格表头显示文字
+                    align: 'left', // 左右居中
+                    valign: 'middle', // 上下居中
+                    width:'30%'
+                }, {
+                    field: 'remark',
+                    title: '备注',
+                    align: 'left',
+                    valign: 'middle',
+                    width:'70%'
+
+                }
+            ],
+            responseHandler: function(res) {
+
+                return {total: res.content.totalElements, rows: res.content.content};
+            },
+            onLoadSuccess: function() {  //加载成功时执行
+                //禁用全选
+                $("input[name='btSelectAll']").attr("hidden", "true");
+                console.info("加载成功");
+            },
+            onLoadError: function() {  //加载失败时执行
+                console.info("加载数据失败");
+            },
+            //单击选中
+            onClickRow: function(row, $element) {
+                $($element.children()[0]).children().click();
+            }
+        });
+
+        //给表绑定编号
+        $("#table-sysDictionary").attr('cateCode', data.cateCode);
+
+    }
+
+    //监听表tools点击事件
+    function refreshTable() {
+        $("#table-sysDictionary").bootstrapTable('refresh', {silent: true});
+    }
+
+    function addDictionary() {
+        initModal({method: 'add', cateCode: $("#table-sysDictionary").attr('cateCode')});
+        $('#modal-dictionary').modal('toggle');
+    }
+
+    function updateDictionary() {
+        var row = $("#table-sysDictionary").bootstrapTable('getSelections');
+
+        if (row.length == 1) {
+            initModal({
+                oldName: row[0].name,
+                oldRemark: row[0].remark,
+                dicId: row[0].id,
+                method: 'update',
+                cateCode: $("#table-sysDictionary").attr('cateCode')
+            });
+            $('#modal-dictionary').modal('toggle');
+        } else {
+            alert('请选择一条要操作的数据');
+        }
+    }
+
+    function deleteDictionary() {
+        var row = $("#table-sysDictionary").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            var dicId = row[0].id;
+            $.ajax({
+                type: "POST",
+                url: "/s/sysDictionary/person/deleteSysDictionary",
+                data: {dicId: dicId},
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        alert('删除成功');
+                        refreshTable();
+                    } else {
+                        alert('删除失败');
+                    }
+                }
+            });
+
+        } else {
+            alert('请选择一条要操作的数据');
+        }
+    }
+
+    //modal-dictionary-methodName modal-body-dictionary modal-dictionary-action
+
+    function initModal(data) {
+        var method = data.method;
+
+        var cateCode = data.cateCode;
+        if (method === 'add') {
+            $('#modal-dictionary-methodName').html('添加字典');
+            $('#modal-dictionary-action').html('添加');
+            var inputName = '<input type="text" class="form-control" placeholder="名称">';
+            var inputRemark = '<br><input type="text" class="form-control" placeholder="备注">';
+
+            $('#modal-body-dictionary').empty().append(inputName).append(inputRemark);
+
+            $('#modal-dictionary-action').attr('onclick', 'addDictionaryAction({"cateCode":"' + cateCode + '"});');
+
+        } else if (method === 'update') {
+            var dicId = data.dicId;
+            var oldName = data.oldName;
+            var oldRemark = data.oldRemark;
+            $('#modal-dictionary-methodName').html('修改字典');
+            $('#modal-dictionary-action').html('修改');
+            var inputName = '<input type="text" class="form-control" placeholder="' + oldName + '">';
+            var inputRemark = '<br><input type="text" class="form-control" placeholder="' + oldRemark + '">';
+
+            $('#modal-body-dictionary').empty().append(inputName).append(inputRemark);
+
+            $('#modal-dictionary-action').attr('onclick', 'updateDictionaryAction({"dicId":' + dicId + '});');
+
+        }
+
+    }
+
+    function addDictionaryAction(data) {
+        var newName = $('#modal-body-dictionary input')[0].value;
+        var newRemark = $('#modal-body-dictionary input')[1].value;
+        var data = {cateCode: data.cateCode, name: newName, remark: newRemark};
+
+        $.ajax({
+            type: "POST",
+            url: "/s/sysDictionary/person/addSysDictionary",
+            data: data,
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    alert('添加成功');
+                    refreshTable();
+                    $('#modal-dictionary').modal('toggle');
+                } else {
+                    alert('新建字典失败');
+                }
+            }
+        });
+
+    }
+
+    function updateDictionaryAction(data) {
+        var newName = $('#modal-body-dictionary input')[0].value;
+        var newRemark = $('#modal-body-dictionary input')[1].value;
+        var data = {"dicId": data.dicId, "name": newName, "remark": newRemark};
+        $.ajax({
+            type: "PUT",
+            url: "/s/sysDictionary/person/updateSysDictionary",
+            dataType: "json",
+            data: data,
+            success: function(data) {
+                if (data.success) {
+                    alert('修改成功');
+                    refreshTable();
+                    $('#modal-dictionary').modal('toggle');
+                } else {
+                    alert('修改字典失败');
+                }
+            }
+        });
+    }
+
+
+</script>

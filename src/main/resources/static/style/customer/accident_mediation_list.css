@@ -1,0 +1,100 @@
+.ac-mediation-main{
+    padding:30px 112px;
+}
+.header{
+    margin-top:100px;
+    margin-left:100px;
+}
+.header img{
+    margin-right:20px;
+}
+.ac-mediation-top-title{
+    margin-right:50px;
+    font-size:18px;
+    color: #6f6d95;
+}
+input.ac-mediation-center{
+    height:40px;
+    line-height:40px;
+    width:400px;
+    border-radius:3px;
+    padding:10px;
+    margin-left:20px;
+    color:#B2B2B2;
+    box-sizing:  border-box;
+    border: 1px solid #d8d8d8;
+}
+.ac-mediation-search{
+    border:none;
+    background-color:#5d92ff;
+    color:#fff;
+    height:40px;
+    line-height:40px;
+    margin-left:10px;
+    width:80px;
+    border-radius:6px;
+    text-align: center;
+}
+.ac-mediation-main-dtl{
+    margin-top:20px;
+    border-collapse:collapse;
+    width:100%;
+}
+.ac-mediation-main-dtl tr{
+    border: 1px solid #D8D8D8;
+    height: 100px;
+}
+.ac-mediation-main-dtl td,.ac-mediation-main-dtl th{
+    text-align:left;
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:20px;
+    width:13%;
+}
+.ac-mediation-main-dtl th{
+    font-weight:normal;
+}
+.ac-mediation-main-dtl .ac-mediation-dtl-title{
+    background-color: #EDF5FF;
+    height: 60px;
+    box-sizing: border-box;
+}
+.ac-mediation-time{
+    color:#6f6d95;
+}
+.ac-mediation-main-dtl td.ac-mediation-id,.ac-mediation-main-dtl th.ac-mediation-id{
+    color:#abaab0;
+    width: 10%;
+}
+.ac-mediation-card-no{
+    color:#abaab0;
+}
+.ac-mediation-negotiation,.ac-mediation-org{
+    color:#569bd4;
+}
+.ac-mediation-preview button{
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #4182FE;
+    box-sizing: border-box;
+    color: #5A94FF;
+    font-size: 20px;
+}
+.accident_mediation-back-home{
+    background-color:#5d92ff;
+    padding:20px;
+    color:#fff;
+    border-radius:10px;
+    border:none;
+}
+.ac-mediation-ft{
+    text-align:center;
+    margin:50px auto;
+}
+.kc-center li{
+    margin-top:60px;
+    width:33%;
+}

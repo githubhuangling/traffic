@@ -1,0 +1,40 @@
+body{
+    background:url("../../image/customer/bg/bg_4.png") no-repeat;
+}
+.page{text-align:  left;}
+.title{
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+.content{
+    line-height: 60px;
+    font-size: 36px;
+    color: #646464;
+    width: 1540px;
+    height: 550px;
+    overflow: scroll;
+    overflow-x:hidden;
+}
+.footer{
+    height:100px;
+    line-height:100px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width:300px;
+    border-radius:8px;
+    margin: 0;
+    margin-top: 60px;
+}
+.footer a{
+    border:1px solid #3C69DE;
+    background-color:#3C69DE;
+    width: 520px;
+    height: 100px;
+    line-height: 100px;
+}
+a.disable-href{
+    background:#646464;
+    color:#fff;
+    border-color:#646464;
+}

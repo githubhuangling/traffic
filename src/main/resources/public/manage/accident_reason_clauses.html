@@ -1,0 +1,312 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="col-xs-2" style="padding: 0;">
+                    <button type="button" class="btn btn-block btn-default btn-lg" onclick="returnToOriginalPage();">返回</button>
+                </div>
+            </div>
+            <div class="box-body">
+
+                <div id="toolbar-clause" class="btn-group" style="float: right;">
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="refresh();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadAddModal();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="deleteData();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <div style="height:700px; width: 100%; overflow-y: scroll;">
+                    <table id="table-clause"></table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="modal-clause" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="width: 80%">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">法律条款</h4>
+            </div>
+            <div class="modal-body" id="modal-items">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box">
+                            <div class="box-body">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        查询条件
+                                    </div>
+
+                                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                                        <label class="col-xs-1 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                                        <div class="col-xs-4">
+                                            <input id="clause-findname" class="form-control" oninput="searchAddClause();"></input>
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div id="table-accidentReason-rebuildDiv">
+                                    <table id="table-accidentReason-AddClause"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+
+
+                <button type="button" id="button-clause-add" class="btn btn-primary" onclick="addData();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<script>
+    var reasonId=$.cookie('accidentReasonIdForFrontPage');
+    $("#table-clause").bootstrapTable({ // 对应table标签的id
+        url: "/s/clause/byAccidentReason/"+reasonId, // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        //toolbar: "#toolbar-clause",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        singleSelect: false,//单选
+        pageSize: 999, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        //pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+            return {
+                size: 9999,//params.limit,//params.limit, // 每页要显示的数据条数
+                page: 1//(params.offset / params.limit) + 1, // 当前页
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'clause', // 返回json数据中的name
+                title: '条款名称', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }
+        ],
+        responseHandler: function(res) {
+            return res.msg.content;
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            //$("input[name='btSelectAll']").attr("hidden", "true");
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refresh() {//刷新表
+        $("#table-clause").bootstrapTable('refresh');
+    }
+
+    function loadAddModal() {//打开添加，并初始化数据
+        $('#myModalLabel').html('添加');
+        $('#behavior-findname').val('');
+
+        $('#table-accidentReason-rebuildDiv').empty();
+        $('#table-accidentReason-rebuildDiv').append('<table id="table-accidentReason-AddClause"></table>');
+
+        initToaddTable();
+
+        $('#modal-clause').modal('toggle');
+
+    }
+
+    function addData() {//确定添加
+
+
+        var exsitClauses=$("#table-clause").bootstrapTable('getOptions').data;
+        var toaddClauses=$("#table-accidentReason-AddClause").bootstrapTable('getSelections');
+
+        var allClauses=exsitClauses.concat(toaddClauses);
+
+        var clauseIds=new Array();
+        for (var i=0;i<allClauses.length;i++){
+            clauseIds.push(allClauses[i].id);
+        }
+        var reasonId=$.cookie('accidentReasonIdForFrontPage');
+
+        $.ajax({
+            type: "PUT",
+            url: "/s/accidentReason/"+reasonId,
+            dataType: "json",
+            data: {id:reasonId,clauseIds:clauseIds},
+            success: function(data) {
+
+                if (data.result){
+                    alert('添加成功');
+                    $('#modal-clause').modal('toggle');
+                    refresh();
+                }else{
+                    alert('添加失败');
+                }
+            }
+        });
+
+    }
+
+
+    //删除
+    function deleteData(){
+        var reasonId=$.cookie('accidentReasonIdForFrontPage');
+        var exsitClauses=$("#table-clause").bootstrapTable('getOptions').data;
+        var exsitIds=new Array();
+        for (var i=0;i<exsitClauses.length;i++) {
+            exsitIds.push(exsitClauses[i].id);
+        }
+        var todeleteClauses=$("#table-clause").bootstrapTable('getSelections');
+        var todeleteIds=new Array();
+        for (var i=0;i<todeleteClauses.length;i++) {
+            todeleteIds.push(todeleteClauses[i].id);
+        }
+        for (var i = exsitIds.length - 1; i >= 0; i--) {
+            a = exsitIds[i];
+            for (var j = todeleteIds.length - 1; j >= 0; j--) {
+                b = todeleteIds[j];
+                if (a == b) {
+                    exsitIds.splice(i, 1);
+                    todeleteIds.splice(j, 1);
+                    break;
+                }
+            }
+        }
+
+
+
+        $.ajax({
+            type: "PUT",
+            url: "/s/accidentReason/"+reasonId,
+            dataType: "json",
+            data: {id:reasonId,clauseIds:exsitIds},
+            success: function(data) {
+
+                if (data.result){
+                    alert('删除成功');
+                    refresh();
+                }else{
+                    alert('删除失败');
+                }
+            }
+        });
+
+    }
+
+
+
+</script>
+
+
+<!--待添加法律条款-->
+<script>
+    var reasonId=$.cookie('accidentReasonIdForFrontPage');
+    //初始化待添加表
+    function initToaddTable() {
+        $("#table-accidentReason-AddClause").bootstrapTable({ // 对应table标签的id
+            url: "/s/clause/excludeByAccidentReason/"+reasonId, // 获取表格数据的url
+            method: 'GET',
+            contentType: "application/x-www-form-urlencoded",
+            dataType: 'json',
+            toolbarAlign: 'right',
+            cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+            striped: true,  //表格显示条纹，默认为false
+            singleSelect: false,//单选
+            pageSize: 20, // 页面数据条数
+            pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+            pageNumber: 1, // 首页页码
+            pagination: true,//是否分页
+            sidePagination: "server",  // 设置为服务器端分页
+            queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+                return {
+                    size: params.limit,//params.limit, // 每页要显示的数据条数
+                    page: (params.offset / params.limit) + 1, // 当前页
+                };
+            },
+            /* sortName: 'name', // 要排序的字段
+             sortOrder: 'desc', // 排序规则 */
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    field: 'clause', // 返回json数据中的name
+                    title: '条款名称', // 表格表头显示文字
+                    align: 'center', // 左右居中
+                    valign: 'middle' // 上下居中
+                }
+            ],
+            responseHandler: function(res) {
+                return {total: res.msg.totalElements, rows: res.msg.content};
+            },
+            onLoadSuccess: function() {  //加载成功时执行
+                //禁用全选
+                $("input[name='btSelectAll']").attr("hidden", "true");
+                console.info("加载成功");
+            },
+            onLoadError: function() {  //加载失败时执行
+                console.info("加载数据失败");
+            },
+            //单击选中
+            onClickRow: function(row, $element) {
+                $($element.children()[0]).children().click();
+            }
+        });
+    }
+
+
+    //带参数查询
+    function searchAddClause() {
+        $("#table-accidentReason-AddClause").bootstrapTable('refresh', {
+            query: {
+                clause: $("#clause-findname").val()
+            }
+        });
+    }
+
+
+</script>

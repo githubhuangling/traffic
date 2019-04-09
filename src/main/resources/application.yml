@@ -1,0 +1,70 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    #url: jdbc:mysql://ctftech.tpddns.cn:43306/traffic?characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/traffic?characterEncoding=utf8&useSSL=false
+    username: root
+    password: dark8187
+    driver-class-name: com.mysql.jdbc.Driver
+    test-while-idle: true
+    validation-query: select 1 from sys_menu
+    generate-unique-name: true
+  jpa:
+      show-sql: false
+      hibernate:
+        ddl-auto: update
+#        naming:
+#          strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL55Dialect
+          format_sql: false
+  thymeleaf:
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+logging:
+  level:
+    root: info
+    com.ctf.traffic: debug
+    jdbc.resultset: off
+    jdbc.audit: off
+    jdbc.sqlonly: off
+
+server:
+  port: 80
+  servlet:
+    context-path: /
+    session:
+      tracking-modes: cookie,url
+      timeout: 1800
+      cookie:
+        name: ramer1
+#头像文件路径
+ImgPath:
+  winBasePath: C:/Users/Adam/TMP/
+  otherBasePath: home/wx/User/
+QrcodeUrl: http://47.110.73.234/wx/getQrcode?scene=upload_
+com:
+  ctf:
+    traffic:
+      #    六合一接口地址
+      six-to-one-url: http://125.70.9.218:8088/
+      insurance:
+        url: http://125.70.9.158:8181/
+        #      保单code
+        code: TRAFFIC_QWEQWEQWE
+        #      保单secret
+        secret: ASDAQQWREQW!@$QAFDSFASF
+
+  

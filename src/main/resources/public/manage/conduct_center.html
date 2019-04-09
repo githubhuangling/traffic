@@ -1,0 +1,443 @@
+<div class="row">
+    <div class="col-xs-2">
+        <div class="box">
+            <div class="box-body">
+                <div class="box-header with-border" style="text-align: center;">
+                    <h3 class="box-title">快处中心</h3>
+
+
+                    <div class="box-tools btn-group">
+                       <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                         <i class="fa fa-list-ul"></i>
+                         <span class="sr-only">Toggle Dropdown</span>
+                       </button>
+                       <ul class="dropdown-menu" role="menu" id="ul-cates-menu">
+                           <li data-toggle="modal" data-target="#modal-cate" onclick="loadCateAdd();"><a href="#"><i class="fa fa-plus" ></i>新建</a></li>
+                           <li   onclick="loadCateUpdate();"><a href="#"><i class="fa fa-pencil" ></i>修改</a></li>
+                           <li  onclick="deleteCate();"><a href="#"><i class="fa fa-close"></i>删除</a></li>
+                       </ul>
+                     </div>
+                </div>
+                <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked" id="ul-cates">
+                        <!--<li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>
+                        <li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>
+                        <li class="li-cate" ><a href="#"><i class="fa  fa-circle-o"></i>类型1</a></li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-4">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">设备</h3>
+            </div>
+            <div class="box-body">
+               <!-- <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+
+
+                        <label class="col-xs-1 control-label" style="text-align: right; margin-top:5px">名称：</label>
+                        <div class="col-xs-4">
+                            <input id="accidentReason-search" class="form-control" oninput="searchByCategoryId();"></input>
+                        </div>
+
+
+                    </div>
+
+                </div>-->
+                <div id="toolbar-accidentReason" class="btn-group">
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="searchByCategoryId();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadAddReason();">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">&nbsp;</span>添加
+                    </button>
+
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="deleteReason();">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true">&nbsp;</span>删除
+                    </button>
+                </div>
+                <table id="table-accidentReason"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="modal-accidentReason" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">快处中心</h4>
+            </div>
+            <div class="modal-body" id="modal-items">
+                <!--<div class="input-group">
+                    <span class="input-group-addon">名称</span>
+                    <input id="input-accidentReason-name" type="text" class="form-control" placeholder="值">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">图标上传</span>
+                    <input id="input-accidentReason-icon" type="file" class="form-control">
+                </div>-->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <button type="button" id="button-accidentReason-update" class="btn btn-primary" onclick="updateReason();">
+                    提交更改
+                </button>
+
+                <button type="button" id="button-accidentReason-add" class="btn btn-primary" onclick="addReason();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+<!-- 类操作模态框 -->
+<div class="modal fade" id="modal-cate" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="cateMethodName">快处中心操作模态框</h4>
+            </div>
+            <div class="modal-body" id="modal-cate-items">
+                <!--<div class="input-group">
+                    <span class="input-group-addon">名称</span>
+                    <input id="input-accidentReason-name" type="text" class="form-control" placeholder="值">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">图标上传</span>
+                    <input id="input-accidentReason-icon" type="file" class="form-control">
+                </div>-->
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+                <button type="button" id="button-cate-update" class="btn btn-primary" onclick="updateCate();">
+                    提交更改
+                </button>
+
+                <button type="button" id="button-cate-add" class="btn btn-primary" onclick="addCate();">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+
+
+
+<!--快处中心-->
+<script>
+    //获取事故原因类型列表
+    getreasonCategory();
+    function getreasonCategory() {
+        $.ajax({
+            type: "GET",
+            url: "/s/conductCenter/getConductCenter?t="+new Date().getTime(),
+            dataType: "json",
+            data: {page:1,size:9999},
+            success: function(data) {
+                if (data.success) {
+                    $('#ul-cates').empty();
+                    for (var i=0;i<data.content.content.length;i++){
+                        var li='<li class="li-cate" centerId="'+data.content.content[i].id+'" name="'+data.content.content[i].name+'" ><a href="#"><i class="fa  fa-circle-o"></i>'+data.content.content[i].name+'</a></li>';
+                        $('#ul-cates').append(li);
+                    }
+                    if ($('#ul-cates li').length>0){
+                        $('#ul-cates li')[0].click();
+                    }
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+    //打开类添加模态框
+    function loadCateAdd(){
+        $('#cateMethodName').html('添加快处中心');
+        $('#modal-cate-items').empty();
+        var itemCate = '<div class="input-group">' +
+                       '     <span class="input-group-addon">快处中心名称</span>' +
+                       '     <input id="input-cate-name" type="text" class="form-control" >' +
+                       '</div>';
+
+
+        $('#modal-cate-items').append(itemCate);
+
+        $('#button-cate-update').hide();
+        $('#button-cate-add').show();
+
+    }
+    //确定添加类
+    function addCate(){
+        var name = $('#input-cate-name').val();
+        $.ajax({
+            type: "POST",
+            url: "/s/conductCenter",
+            dataType: "json",
+            data: {name:name},
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                    $('#modal-cate').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+
+    //加载修改类模态框
+    function loadCateUpdate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的快处中心");return;}
+
+        var id=$($('#ul-cates>.active')[0]).attr('centerId');
+        var name = $($('#ul-cates>.active')[0]).attr('name');
+
+
+        $('#cateMethodName').html('修改快处中心名称');
+        $('#modal-cate-items').empty();
+        var itemCate = '<div class="input-group">' +
+                       '     <span class="input-group-addon">快处中心名称</span>' +
+                       '     <input id="input-cate-name" type="text" class="form-control" >' +
+                       '</div>';
+
+
+        $('#modal-cate-items').append(itemCate);
+        $('#input-cate-name').val(name);
+
+        $('#button-cate-add').hide();
+        $('#button-cate-update').show();
+        $('#modal-cate').modal('toggle');
+    }
+
+    //确定修改类
+    function updateCate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的快处中心");return;}
+
+        var id=$($('#ul-cates>.active')[0]).attr('centerId');
+        var name = $('#input-cate-name').val();
+
+        $.ajax({
+            type: "PUT",
+            url: "/s/conductCenter/"+id,
+            dataType: "json",
+            data: {name:name},
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                    $('#modal-cate').modal('toggle');
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
+
+    function deleteCate(){
+        var lis=$('#ul-cates>.active');
+        if (lis.length!=1){alert("请选择要操作的快处中心");return;}
+        var id=$($('#ul-cates>.active')[0]).attr('centerId');
+
+        $.ajax({
+            type: "DELETE",
+            url: "/s/conductCenter/"+id,
+            dataType: "json",
+            success: function(data) {
+                if (data.result) {
+                    getreasonCategory();
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+
+
+
+
+    //绑定监听类型点击事件
+    $('#ul-cates').on('click','li',function(){
+        $('#ul-cates li').removeClass("active");
+        $(this).addClass("active");
+
+        searchByCategoryId( $(this).attr('centerId'));
+    });
+
+
+    <!--事故原因-->
+    $("#table-accidentReason").bootstrapTable({ // 对应table标签的id
+        url: '/s/conductCenter/listDeviceByConductCenterId', // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-accidentReason",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        singleSelect: true,//单选
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'name', // 返回json数据中的name
+                title: '设备', // 表格表头显示文字
+                align: 'left', // 左右居中
+                valign: 'middle' // 上下居中
+            }
+
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.msg.totalElements, rows: res.msg.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+        },
+        onLoadError: function() {  //加载失败时执行
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+
+
+    function loadAddReason() {//打开添加，并初始化数据
+        $('#myModalLabel').html('添加');
+        $('#modal-items').empty();
+
+
+        var itemDescription = '<div class="input-group">' +
+                         '     <span class="input-group-addon">设备硬盘码</span>' +
+                         '     <input id="input-accidentReason-description" type="text" class="form-control" placeholder="">' +
+                         '</div><br>';
+        $('#modal-items').append(itemDescription);
+
+
+
+
+        $('#button-accidentReason-update').hide();
+        $('#button-accidentReason-add').show();
+
+        $('#modal-accidentReason').modal('toggle');
+
+    }
+
+    function addReason() {//确定添加
+        if ($('#ul-cates .active').length!=1){
+            alert('请确认要添加设备的中心');
+            return false
+        }
+
+        var newcode=$('#input-accidentReason-description').val();
+        var conductCenterId=$($('#ul-cates>.active')[0]).attr('centerId');
+
+        $.ajax({
+            type: "POST",
+            url: "/s/conductCenter/addDevice",
+            dataType: "json",
+            data: {newcode:newcode,conductCenterId:conductCenterId},
+            success: function(data) {
+
+                if (data.result){
+                    alert('添加成功');
+                    $('#modal-accidentReason').modal('toggle');
+                    searchByCategoryId(conductCenterId);
+                }else{
+                    alert('添加失败');
+                }
+
+
+            }
+        });
+
+
+
+
+    }
+
+
+
+    //删除
+    function deleteReason(){
+        var row = $("#table-accidentReason").bootstrapTable('getSelections');
+        var conductCenterId=$($('#ul-cates>.active')[0]).attr('centerId');
+        if (row.length == 1) {
+            $.ajax({
+                type: "POST",
+                url: "/s/conductCenter/deleteDevice",
+                dataType: "json",
+                data:{deletecode:row[0].name,conductCenterId:conductCenterId},
+                success: function(data) {
+                    if (data.result) {
+
+                        searchByCategoryId(conductCenterId);
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+        } else {
+            alert('请选择要删除的数据');
+        }
+    }
+
+
+    //带参数:类id查询
+    function searchByCategoryId(data) {
+        var conductCenterId=data;
+
+        $("#table-accidentReason").bootstrapTable('refresh', {
+            query: {
+                conductCenterId: conductCenterId,
+            }
+        });
+    }
+
+</script>
+

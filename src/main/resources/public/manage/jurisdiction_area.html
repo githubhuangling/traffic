@@ -1,0 +1,168 @@
+<div class="row">
+    <div class="col-xs-6">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">管辖区域</h3>
+            </div>
+            <div class="box-body">
+                <div id="toolbar-jurisdiction_area" class="btn-group">
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="refresh();">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true">&nbsp;</span>刷新
+                    </button>
+
+                    <button type="button" class="btn btn-default toolbar-btn" onclick="loadSysconfUpdate();">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">&nbsp;</span>修改
+                    </button>
+                </div>
+                <table id="table-jurisdiction_area"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹出框1 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon">值</span> <input id="input-value"
+                                                                    type="text" class="form-control" placeholder="值">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" id="button-update" class="btn btn-primary">提交更改</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<script>
+    $('#button-update').on("click", updateSysconf);
+
+    var code;
+    $("#table-jurisdiction_area").bootstrapTable({ // 对应table标签的id
+        url: "/s/sysconf/person/getSysconf", // 获取表格数据的url
+        method: 'GET',
+        contentType: "application/x-www-form-urlencoded",
+        dataType: 'json',
+        toolbar: "#toolbar-jurisdiction_area",
+        toolbarAlign: 'right',
+        cache: false, // 设置为 false 禁用 AJAX 数据缓存， 默认为true
+        striped: true,  //表格显示条纹，默认为false
+        pagination: true, // 在表格底部显示分页组件，默认false
+        singleSelect: true,//单选
+        pageSize: 20, // 页面数据条数
+        pageList: [5, 10, 15,20], // 设置页面可以显示的数据条数
+        pageNumber: 1, // 首页页码
+        pagination: true,//是否分页
+        sidePagination: "server",  // 设置为服务器端分页
+        queryParams: function(params) { // 请求服务器数据时发送的参数，可以在这里添加额外的查询参数，返回false则终止请求
+            return {
+                size: params.limit,//params.limit, // 每页要显示的数据条数
+                page: (params.offset / params.limit) + 1, // 当前页
+                code: 'SYS'
+            };
+        },
+        /* sortName: 'name', // 要排序的字段
+         sortOrder: 'desc', // 排序规则 */
+        columns: [
+            {
+                checkbox: true
+            }, {
+                field: 'name', // 返回json数据中的name
+                title: '名称', // 表格表头显示文字
+                align: 'center', // 左右居中
+                valign: 'middle' // 上下居中
+            }, {
+                field: 'value',
+                title: '值',
+                align: 'center',
+                valign: 'middle'
+
+            }, {
+                field: 'remark',
+                title: '备注',
+                align: 'center',
+                valign: 'middle',
+
+            }
+        ],
+        responseHandler: function(res) {
+
+            return {total: res.content.totalElements, rows: res.content.content};
+        },
+        onLoadSuccess: function() {  //加载成功时执行
+            //禁用全选
+            $("input[name='btSelectAll']").attr("hidden", "true");
+            console.info("加载成功");
+        },
+        onLoadError: function() {  //加载失败时执行
+            console.info("加载数据失败");
+        },
+        //单击选中
+        onClickRow: function(row, $element) {
+            $($element.children()[0]).children().click();
+        }
+    });
+
+    function refresh() {//刷新表
+        $("#table-jurisdiction_area").bootstrapTable('refresh', {url: '/s/sysconf/person/getSysconf'});
+
+    }
+
+    function loadSysconfUpdate() {//打开修改框，并初始化数据
+        var row = $("#table-jurisdiction_area").bootstrapTable('getSelections');
+        if (row.length == 1) {
+            $('#input-value').attr('placeholder', row[0].value);
+            $('#input-value').val("");
+            $('#myModal').modal('show');
+            code = row[0].code;
+        } else {
+            alert('请选择要修改的数据');
+        }
+
+    }
+
+    //修改参数
+    function updateSysconf() {
+
+        var value = $('#input-value').val();
+        var pas = {
+            url: "/s/sysconf/person/getSysconf",
+            silent: true,
+            query: {
+                code: code
+            }
+        };
+        if (value != "") {
+            $.ajax({
+                type: "PUT",
+                url: "/s/sysconf/person/updateSysconf?code=" + code + "&value=" + value,
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        $("#table-jurisdiction_area").bootstrapTable('refresh', pas);
+                        $('#myModal').modal('hide');
+                    }
+                }
+            });
+        } else {
+            alert("请输入参数值");
+        }
+    }
+</script>
+

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>事故快处系统</title>
+
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="/libs/bootstrap/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/libs/font-awesome/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/libs/ionicons/ionicons.min.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="/libs/jquery-jvectormap/jquery-jvectormap.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/libs/adminLTE/AdminLTE.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="/libs/bootstrap-table/bootstrap-table.css"/>
+    <!--日期选择器-->
+    <link rel="stylesheet" href="/libs/datepicker/bootstrap-datepicker3.standalone.css">
+
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="/libs/_all-skins/_all-skins.min.css">
+
+
+    <!-- 图片上传 -->
+
+    <link rel="stylesheet" href="/libs/cropper/cropper.min.css">
+    <link rel="stylesheet" href="/libs/cropper/ImgCropping.css">
+
+    <!-- 数据字典页样式 -->
+    <link rel="stylesheet" href="/style/manage/dictionary.css">
+
+    <!-- 日期选择器 -->
+    <link rel="stylesheet" href="/libs/flexDate/flexDate.min.css">
+
+    <link rel="stylesheet" href="/style/manage/my.css">
+
+    <link rel="stylesheet" href="/style/manage/checkbox.css">
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="/manage/sys_index.html" class="logo">
+            <!--<span class="logo-mini"><b></b></span>-->
+            <span class="logo-lg"><b>事故快处系统</b></span>
+        </a>
+
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">导航</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/image/user.jpg" class="user-image userHeadImage" alt="User Image">
+                            <span class="hidden-xs userInfo-name">user</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="/image/user.jpg" class="img-circle userHeadImage" alt="User Image">
+
+                                <p class="userInfo-name">
+                                    user
+                                </p>
+                                <small style="color: white" class="userInfo-validate sysperson">有效期至：-</small>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="row" id="div-userRoles"></div>
+                            </li>
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat" onclick="loadUserSettings();">设置</a>
+                                </div>
+
+                                <div class="pull-left" style="margin-left: 35px">
+                                    <a href="#" class="btn btn-default btn-flat" onclick="loadChangePassword();">修改密码</a>
+                                </div>
+
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat" onclick="logout();">注销</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel info">
+                <div class="pull-left image">
+                    <img src="/image/user.jpg" class="img-circle userHeadImage" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p class="userInfo-name ">user</p>
+                </div>
+            </div>
+            <ul class="sidebar-menu" data-widget="tree" id="index-menu">
+            </ul>
+        </section>
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+
+        <!-- 内容 -->
+        <section class="content" id="index-content"></section>
+        <!-- 第二内容页 -->
+        <section class="content" id="index-content-Front" hidden="hidden"></section>
+
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.0
+        </div>
+
+    </footer>
+    <!-- 用户设置模态框 -->
+    <div class="modal fade" id="mySettings" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <!-- /.modal -->
+    </div>
+
+
+
+
+    <!--图片裁剪框 start-->
+    <div style="display: none" class="tailoring-container">
+        <div class="black-cloth" onClick="closeTailor(this)"></div>
+        <div class="tailoring-content">
+            <div class="tailoring-content-one">
+                <label title="上传图片" for="chooseImg" class="l-btn choose-btn">
+                    <input type="file" accept="image/jpg,image/jpeg,image/png" name="file" id="chooseImg" class="hidden"
+                           onChange="selectImg(this)">
+                    选择图片
+                </label>
+                <div class="close-tailoring" onclick="closeTailor(this)">×</div>
+            </div>
+            <div class="tailoring-content-two">
+                <div class="tailoring-box-parcel">
+                    <img id="tailoringImg">
+                </div>
+                <div class="preview-box-parcel">
+                    <p>图片预览：</p>
+                    <div class="square previewImg"></div>
+                    <div class="circular previewImg"></div>
+                </div>
+            </div>
+            <div class="tailoring-content-three">
+                <button class="l-btn cropper-reset-btn">复位</button>
+                <button class="l-btn cropper-rotate-btn">旋转</button>
+                <button class="l-btn cropper-scaleX-btn">换向</button>
+                <button class="l-btn sureCut" id="sureCut">确定</button>
+            </div>
+        </div>
+    </div>
+    <!--图片裁剪框 end-->
+</div>
+<!-- ./wrapper -->
+
+<script src="/libs/jquery/jquery.min.js"></script>
+<script src="/libs/bootstrap/bootstrap.min.js"></script>
+<script src="/libs/fastclick/fastclick.js"></script>
+<script src="/libs/adminLTE/adminlte.min.js"></script>
+<script src="/libs/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/libs/Chart/Chart.js"></script>
+<script src="/libs/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/libs/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+<script src="/libs/jquery-cookie/jquery.cookie.js"></script>
+<script src="/script/manage/date.js"></script>
+<!-- 图片上传插件 -->
+<script src="/libs/cropper/cropper.min.js"></script>
+<!--ajax提交表单需要引入jquery.form.js-->
+<script src="http://malsup.github.io/jquery.form.js"></script>
+<!--日期选择-->
+<script src="/libs/datepicker/bootstrap-datepicker.min.js"></script>
+<!-- 报表 -->
+<script src="/libs/Echarts/echarts.common.min.js"></script>
+<!--md5加密-->
+<script src="/script/manage/md5.js"></script>
+<!-- 自定义公共方法类 -->
+<script src="/script/commonUtils.js"></script>
+<!-- jquery打印-->
+<script language="javascript" src="/script/manage/jquery.jqprint-0.3.js"></script>
+<script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js"></script>
+
+<!-- 配置检查ajax返回结果是否为重定向 -->
+<script type="text/javascript">
+
+
+    //设置ajax请求完成后运行的函数,
+    $.ajaxSetup({
+        complete: function(xhr) {
+
+            if ("REDIRECT" == xhr.getResponseHeader("REDIRECT")) { //若HEADER中含有REDIRECT说明后端想重定向，
+                alert(xhr.responseText);
+
+                var win = window;
+                while (win != win.top) {
+                    win = win.top;
+                }
+                win.location.href = xhr.getResponseHeader("CONTENTPATH");//将后端重定向的地址取出来,使用win.location.href去实现重定向的要求
+            }
+        }
+    });
+
+</script>
+<!-- 初始化主页使用者信息 initUserInfo();-->
+<script type="text/javascript">
+    var identity = $.cookie('identity');
+    
+
+
+    //注销
+    function logout() {
+        var url = "/s/sysperson/person/logout";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json"
+
+        });
+
+        $.cookie('identity', null);
+    }
+
+    //初始化person index
+    initUserInfo();
+
+    function initUserInfo() {
+        var userId = $.cookie('userId');
+        //判断是否已登录
+        if ($.cookie('userId') != null) {//已登录
+
+            //初始化用户身份和菜单
+            var url = "/s/sysperson/person/initUserInfoById";
+            $.ajax({
+                type: "get",
+                url: url,
+                data: {userId:userId},
+                dataType: "json",
+                success: function(data) {
+                    if (data.success) {
+                        var userName = data.content.userName;
+                        var validate = data.content.validate;
+                        var phone = data.content.phone;
+                        var gender = data.content.gender;
+
+                        $('.userInfo-name').html(userName);
+                        $('.userInfo-validate').html("有效期至：" + format(validate, "yyyy-MM-dd HH:mm:ss"));
+                        //用户头像
+                        $('.userHeadImage').attr('src', '/s/person/image?t=' + Math.random());
+                        $('.userHeadImage').attr('onerror', 'javascript:this.src="/image/user.jpg"');
+
+                        //用户设置框
+                        $('#mySettings-input-name').attr('placeholder', userName);
+                        $('#mySettings-input-phone').attr('placeholder', phone);
+                        if (gender == 1) {
+                            $('#mySettings-gender-male').click();
+                        } else {
+                            $('#mySettings-gender-female').click();
+                        }
+
+                        //roles去重
+                        var roles = new Array();
+                        for (var i = 0; i < data.content.roles.length; i++) {
+                            var exsited = false;
+                            for (var n = 0; n < roles.length; n++) {
+                                if (roles[n].id === data.content.roles[i].id) {
+                                    exsited = true;
+                                }
+                            }
+                            if (exsited == false) {
+                                roles.push(data.content.roles[i]);
+                            }
+                        }
+
+                        //menu去重、排序
+                        var menus = new Array();
+                        for (var i = 0; i < roles.length; i++) {
+                            for (var n = 0; n < roles[i].menus.length; n++) {
+                                var exsited = false;
+                                for (var m = 0; m < menus.length; m++) {
+                                    if (menus[m].id === roles[i].menus[n].id) {
+                                        exsited = true;
+                                    }
+                                }
+                                if (exsited == false) {
+                                    menus.push(roles[i].menus[n]);
+                                }
+
+                            }
+
+                        }
+
+                        //按menu.sort从小到大排序
+                        function sortMenus(a, b) {
+                            return a.sort - b.sort;
+                        }
+
+                        menus.sort(sortMenus);
+
+                        //加载身份 和菜单
+                        $('#div-userRoles').empty();
+                        for (var i = 0; i < roles.length; i++) {
+                            var role = '<div class="col-xs-4 text-center">'
+                                       + '<a href="#">' + roles[i].name + '</a>'
+                                       + '</div>';
+                            $('#div-userRoles').append(role);
+                        }
+                        $('#index-menu').empty();
+                        for (var i = 0; i < menus.length; i++) {
+                            if (menus[i].parent == null) {
+
+                                var li = '<li id="menuId-' + menus[i].id + '" class="treeview">'
+                                         + '<a href="#">'
+                                         + '<i class="fa fa-cog"></i> <span>' + menus[i].name + '</span>'
+                                         + '<span class="pull-right-container">'
+                                         + '<i class="fa fa-angle-left pull-right"></i>'
+                                         + '</span>'
+                                         + '</a>'
+                                         + '<ul class="treeview-menu"><ul>';
+
+                                $('#index-menu').append(li);
+
+                            } else {
+                                var li;
+                                if (menus[i].leaf) {
+                                    li = '<li id="menuId-' + menus[i].id + '" onclick="loadContent(\'' + menus[i].url +
+                                         '\');"><a href="#"><i class="fa fa-circle-o"></i>' + menus[i].name +
+                                         '</a></li>';
+                                }
+
+                                if (!menus[i].leaf) {
+                                    li = '<li id="menuId-' + menus[i].id + '" class="treeview">'
+                                         + '<a href="#"><i class="fa fa-circle-o"></i> '
+                                         + menus[i].name
+                                         + '<span class="pull-right-container">'
+                                         + '<i class="fa fa-angle-left pull-right"></i>'
+                                         + '</span>'
+                                         + '</a>'
+                                         + '<ul class="treeview-menu ">'
+                                         + '</ul>'
+                                         + '</li>';
+                                }
+
+                                $('#menuId-' + menus[i].parent.id).children('ul').append(li);
+
+                            }
+
+                        }
+
+                    }
+                }
+
+            });
+        } else {//未登录，无cookie
+
+            alert('请先登录');
+
+            if (identity == 'person') {
+                window.location.href = "/login.html";
+                return;
+            }
+            window.location.href = "/login.html";
+        }
+
+    }
+
+    //通过menu.url加载对应的content
+    function loadContent(url) {
+        $('#index-content-Front').hide();
+        $('#index-content').load(url);
+        $('#index-content').show();
+    }
+
+
+</script>
+
+<!--用户修改密码-->
+<script type="text/javascript">
+    //用户修改密码
+    var changemodal= '<div class="modal-dialog">\n' +
+                     '            <div class="modal-content ">\n' +
+                     '                <div class="modal-header">\n' +
+                     '                    <button type="button" class="close" data-dismiss="modal"\n' +
+                     '                            aria-hidden="true">&times;\n' +
+                     '                    </button>\n' +
+                     '                    <h4 class="modal-title">修改密码</h4>\n' +
+                     '                </div>\n' +
+                     '                <div class="modal-body">\n' +
+                     '                    <div class="input-group">\n' +
+                     '\t\t\t\t\t\t<span class="input-group-addon">\n' +
+                     '\t\t\t\t\t\t\t&nbsp;原&nbsp;密&nbsp;码 </span> <input\n' +
+                     '                            id="mySettings-changepassword-oldpassword" type="password" autocomplete="off" class="form-control">\n' +
+                     '                    </div>\n' +
+                     '                    <br>\n' +
+                     '\n' +
+                     '                    <div class="input-group sysperson">\n' +
+                     '                        <span class="input-group-addon">&nbsp;新&nbsp;密&nbsp;码 </span> <input\n' +
+                     '                            id="mySettings-changepassword-newpassword" type="password" autocomplete="off" class="form-control">\n' +
+                     '                    </div>\n' +
+                     '                    <br>\n' +
+                     '\n' +
+                     '                    <div class="input-group sysperson">\n' +
+                     '                        <span class="input-group-addon">再次输入</span> <input\n' +
+                     '                            id="mySettings-changepassword-newpasswordcheck" type="password" autocomplete="off" class="form-control">\n' +
+                     '                    </div>\n' +
+                     '                    <br>\n' +
+                     '\n' +
+                     '                    <br>\n' +
+                     '\n' +
+                     '                </div>\n' +
+                     '                <div class="modal-footer">\n' +
+                     '                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭\n' +
+                     '                    </button>\n' +
+                     '                    <button type="button" class="btn btn-primary"\n' +
+                     '                             onclick="changePassword()">确定\n' +
+                     '                    </button>\n' +
+                     '                </div>\n' +
+                     '            </div>\n' +
+                     '            <!-- /.modal-content -->\n' +
+                     '        </div>';
+    function loadChangePassword() {
+        $('#mySettings').empty().append(changemodal);
+        $('#mySettings').modal('toggle');
+    }
+    function changePassword() {
+        var oldpassword=$('#mySettings-changepassword-oldpassword').val();
+        var newpassword=$('#mySettings-changepassword-newpassword').val();
+        var newpasswordcheck=$('#mySettings-changepassword-newpasswordcheck').val();
+
+        if (newpassword!=newpasswordcheck){
+            alert("密码校验输入不一致，请检查。");
+            return false;
+        }
+
+        newpassword=hex_md5(newpassword);
+        oldpassword=hex_md5(oldpassword);
+        var data={oldpassword:oldpassword,newpassword:newpassword};
+        $.ajax({
+            type: "get",
+            url: "/s/sysperson/person/changepassword",
+            data: data,
+            dataType: "json",
+            success: function(data) {
+                if (data.result) {
+                    alert(data.msg);
+                    $('#mySettings').empty();
+                    $('#mySettings').modal('toggle');
+                }else {
+                    alert(data.msg);
+                }
+            }
+        });
+
+
+
+
+    }
+
+</script>
+
+<!-- 用户设置 -->
+<script type="text/javascript">
+    //用户性别
+    var userGender;
+    var settingmoadl= ' <div class="modal-dialog">\n' +
+                      '            <div class="modal-content ">\n' +
+                      '                <div class="modal-header">\n' +
+                      '                    <button type="button" class="close" data-dismiss="modal"\n' +
+                      '                            aria-hidden="true">&times;\n' +
+                      '                    </button>\n' +
+                      '                    <h4 class="modal-title">设置</h4>\n' +
+                      '                </div>\n' +
+                      '                <div class="modal-body">\n' +
+                      '\n' +
+                      '                    <div class="user-header" style="text-align: center;">\n' +
+                      '\n' +
+                      '                        <img id="finalImg" src="/image/user.jpg" width="33%" class="img-circle userHeadImage"\n' +
+                      '                             style="margin-bottom: 5px;">\n' +
+                      '                        <div>\n' +
+                      '                            <button id="replaceImg" class="l-btn" style="margin: auto;display: block;">更换头像</button>\n' +
+                      '                        </div>\n' +
+                      '                        <br>\n' +
+                      '                    </div>\n' +
+                      '\n' +
+                      '\n' +
+                      '                    <div class="input-group">\n' +
+                      '\t\t\t\t\t\t<span class="input-group-addon">\n' +
+                      '\t\t\t\t\t\t\t&nbsp;&nbsp;姓&nbsp;&nbsp;名 &nbsp;&nbsp;</span> <input\n' +
+                      '                            id="mySettings-input-name" type="text" autocomplete="off" class="form-control">\n' +
+                      '                    </div>\n' +
+                      '                    <br>\n' +
+                      '\n' +
+                      '                    <div class="input-group sysperson">\n' +
+                      '                        <span class="input-group-addon">电话号码</span> <input\n' +
+                      '                            id="mySettings-input-phone" type="text" autocomplete="off" class="form-control">\n' +
+                      '                    </div>\n' +
+                      '                    <br>\n' +
+                      '\n' +
+                      '\n' +
+                      '                    <br>\n' +
+                      '\n' +
+                      '                    <div class="row">\n' +
+                      '                        <div class="col-xs-6">\n' +
+                      '                            <span>性别：</span>\n' +
+                      '                            <input class=\'mySettings-input-gender\' type="radio" id="mySettings-gender-male"\n' +
+                      '                                   name="mySettings-gender" value=\'1\'/>\n' +
+                      '                            <label for="mySettings-gender-male"><span>男</span></label>\n' +
+                      '                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n' +
+                      '                            <input class=\'mySettings-input-gender\' type="radio" id=\n' +
+                      '                                    "mySettings-gender-female" name="mySettings-gender" value=\'0\'/>\n' +
+                      '                            <label for="mySettings-gender-female"><span>女</span></label>\n' +
+                      '                        </div>\n' +
+                      '\n' +
+                      '                    </div>\n' +
+                      '                    <br>\n' +
+                      '\n' +
+                      '                </div>\n' +
+                      '                <div class="modal-footer">\n' +
+                      '                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭\n' +
+                      '                    </button>\n' +
+                      '                    <button type="button" class="btn btn-primary"\n' +
+                      '                            id="mySettings-submit" onclick="userInfoUpdate();">确定\n' +
+                      '                    </button>\n' +
+                      '                </div>\n' +
+                      '            </div>\n' +
+                      '            <!-- /.modal-content -->\n' +
+                      '        </div>';
+
+    function loadUserSettings() {
+        $('#mySettings').empty().append(settingmoadl);
+        initUserInfo();
+
+
+
+
+
+
+        //设置面板的显示/隐藏
+        $('#mySettings').modal('toggle');
+
+        $('#mySettings-input-name').val("");
+        $('#mySettings-input-phone').val("");
+        $('#mySettings-input-newpassword').val("");
+        //获取用户原性别属性
+        userGender = $('.mySettings-input-gender:checked').val();
+    }
+
+    function userInfoUpdate() {
+        var name = $('#mySettings-input-name').val();
+
+        var phone = $('#mySettings-input-phone').val();
+
+        //todo var newpassword=$('#mySettings-input-newpassword').val();
+        if ((phone.length != 0 && phone.length != 11) || !(phone % 1 === 0)) {//判断电话号码是否正确
+            alert('电话号码输入不正确。（座机请加区号，例：02887654321）');
+            return;
+        }
+
+        var gender = $('.mySettings-input-gender:checked').val();
+
+        var id = $.cookie('userId');//var password=$("#password").val();
+        //todo
+        // if (newpassword.trim()!==""&&newpassword.length>0){
+        //     alert("新密码为："+newpassword+"，请牢记。");
+        //     newpassword=hex_md5(newpassword);
+        // }
+
+
+        var person = {id: id, name: name, phone: phone, gender: gender};
+
+        var url = "/s/sysperson/person/update";
+        $.ajax({
+            type: "get",
+            url: url,
+            data: person,
+            dataType: "json",
+            success: function(data) {
+                if (data.success) {
+                    initUserInfo();
+                }
+            }
+        });
+
+
+        $('#mySettings').modal('toggle');
+    }
+
+    //将base64格式图片转换为文件形式
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type: mime});
+    }
+
+</script>
+<!-- 图片剪切 -->
+<script type="text/javascript">
+
+    //弹出框水平垂直居中
+    (window.onresize = function() {
+        var win_height = $(window).height();
+        var win_width = $(window).width();
+        if (win_width <= 768) {
+            $(".tailoring-content").css({
+                "top": (win_height - $(".tailoring-content").outerHeight()) / 2,
+                "left": 0
+            });
+        } else {
+            $(".tailoring-content").css({
+                "top": (win_height - $(".tailoring-content").outerHeight()) / 2,
+                "left": (win_width - $(".tailoring-content").outerWidth()) / 2
+            });
+        }
+    })();
+
+    //弹出图片裁剪框
+    $("#replaceImg").on("click", function() {
+        $(".tailoring-container").toggle();
+    });
+
+    //图像上传
+    function selectImg(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(evt) {
+            var replaceSrc = evt.target.result;
+            //更换cropper的图片
+            $('#tailoringImg').cropper('replace', replaceSrc, false);//默认false，适应高度，不失真
+        };
+        reader.readAsDataURL(file.files[0]);
+    }
+
+    //cropper图片裁剪
+    $('#tailoringImg').cropper({
+        aspectRatio: 1 / 1,//默认比例
+        preview: '.previewImg',//预览视图
+        guides: false,  //裁剪框的虚线(九宫格)
+        autoCropArea: 0.5,  //0-1之间的数值，定义自动剪裁区域的大小，默认0.8
+        dragCrop: false,  //是否允许移除当前的剪裁框，并通过拖动来新建一个剪裁框区域
+        movable: false,  //是否允许移动剪裁框
+        resizable: false,  //是否允许改变裁剪框的大小
+        zoomable: true,  //是否允许缩放图片大小
+        mouseWheelZoom: true,  //是否允许通过鼠标滚轮来缩放图片
+        touchDragZoom: false,  //是否允许通过触摸移动来缩放图片
+        rotatable: true,  //是否允许旋转图片
+        crop: function(e) {
+            // 输出结果数据裁剪图像。
+        }
+    });
+    //旋转
+    $(".cropper-rotate-btn").on("click", function() {
+        $('#tailoringImg').cropper("rotate", 45);
+    });
+    //复位
+    $(".cropper-reset-btn").on("click", function() {
+        $('#tailoringImg').cropper("reset");
+    });
+    //换向
+    var flagX = true;
+    $(".cropper-scaleX-btn").on("click", function() {
+        if (flagX) {
+            $('#tailoringImg').cropper("scaleX", -1);
+            flagX = false;
+        } else {
+            $('#tailoringImg').cropper("scaleX", 1);
+            flagX = true;
+        }
+        flagX != flagX;
+    });
+
+    //裁剪后的处理
+    $("#sureCut").on("click", function() {
+        if ($("#tailoringImg").attr("src") == null) {
+            return false;
+        } else {
+            var cas = $('#tailoringImg').cropper('getCroppedCanvas');//获取被裁剪后的canvas
+            var base64url = cas.toDataURL('image/png'); //转换为base64地址形式
+            $("#finalImg").prop("src", base64url);//显示为图片的形式
+
+            //关闭裁剪框
+            closeTailor();
+
+            //提交头像
+            var id = $.cookie('userId');
+            var formData = new FormData();
+            var file = dataURLtoBlob($('#finalImg').attr("src"));//将base64格式图片转换为文件形式
+            var newImg = new Date().getTime() + '.png';   //给图片添加文件名
+            formData.append('file', file, newImg);  //formData对象添加文件
+            formData.append("id", id);
+
+            var url = "/s/sysperson/person/setImg";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                async: false,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+
+                }
+            });
+        }
+    });
+
+    //关闭裁剪框
+    function closeTailor() {
+        $(".tailoring-container").toggle();
+    }
+</script>
+<script type="text/javascript">
+    //加载第二内容页
+    function loadFrontContent(url){
+        $('#index-content').hide();
+
+        $('#index-content-Front').load(url);
+        $('#index-content-Front').show();
+
+
+
+    }
+
+    //从第二内容页返回原界面
+    function returnToOriginalPage(){
+        $('#index-content').show();
+        $('#index-content-Front').hide();
+        $('#index-content-Front').empty();
+    }
+
+</script>
+</body>
+</html>

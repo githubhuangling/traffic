@@ -1,0 +1,421 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box" style="min-width: 1003px;overflow: hidden;">
+            <div class="box-header">
+                <h3 class="box-title">统计</h3>
+            </div>
+            <div class="box-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        查询条件
+                    </div>
+
+                    <div class="panel-body form-group" style="margin-bottom:0px;">
+                        <label class="col-xs-2 control-label" style="text-align: right; margin-top:5px">数据日期：</label>
+                        <div class="input-group date datepicker col-xs-3" style="float: left">
+                            <input type='text' class='form-control selectData' id='countDate' name='date'>
+                        </div>
+
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-default toolbar-btn"
+                                    onclick="showThisDayDate()">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true">&nbsp;</span>查询
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+                <div id="main1" style="width: 40%;height:300px;float: left;"></div>
+                <div id="main2" style="width: 60%;height:300px;float: left;"></div>
+                <div id="main3" style="margin-top:40px;width: 100%;height:300px;float: left;"></div>
+
+            </div>
+
+
+
+                <script type="text/javascript">
+                    //获取明天日期
+                    function getTomorFormatDate(today) {
+                        var date = new Date(today.getTime() + 1000 * 60 * 60 * 24);
+                        var seperator1 = "-";
+                        var year = date.getFullYear();
+                        var month = date.getMonth() + 1;
+                        var strDate = date.getDate();
+                        if (month >= 1 && month <= 9) {
+                            month = "0" + month;
+                        }
+                        if (strDate >= 0 && strDate <= 9) {
+                            strDate = "0" + strDate;
+                        }
+                        var currentdate = year + seperator1 + month + seperator1 + strDate;
+                        return currentdate;
+                    }
+
+                    //设置默认当天时间
+                    function getNowFormatDate() {
+                        var date = new Date();
+                        var seperator1 = "-";
+                        var year = date.getFullYear();
+                        var month = date.getMonth() + 1;
+                        var strDate = date.getDate();
+                        if (month >= 1 && month <= 9) {
+                            month = "0" + month;
+                        }
+                        if (strDate >= 0 && strDate <= 9) {
+                            strDate = "0" + strDate;
+                        }
+                        var currentdate = year + seperator1 + month + seperator1 + strDate;
+                        return currentdate;
+                    }
+
+                    $('#countDate').val(getNowFormatDate());
+
+                    function showThisDayDate() {
+                        var myChart1 = echarts.init(document.getElementById('main1'));
+                        var myChart2 = echarts.init(document.getElementById('main2'));
+                        var myChart3 = echarts.init(document.getElementById('main3'));
+                        myChart1.dispose();
+                        myChart2.dispose();
+                        myChart3.dispose();
+                        showDate($('#countDate').val());
+                    }
+
+                    //加载页面默认显示今天的
+                    showDate(getNowFormatDate());
+
+                    function showDate(sdate) {
+                        $.ajax({
+                            type: "GET",
+                            url: "/manage/getDataStatistics",
+                            data: {sdate: sdate, edate: getTomorFormatDate(new Date(sdate))},
+                            dataType: "json",
+                            success: function(data) {
+                                if (data.result) {
+
+
+                                    // 基于准备好的dom，初始化echarts实例。
+                                    var myChart1 = echarts.init(document.getElementById('main1'));
+                                    var myChart2 = echarts.init(document.getElementById('main2'));
+
+                                    // 指定图表的配置项和数据
+                                    var option1 = {
+                                        title: {
+                                            text: '当日受理事故总数：' + data.msg.allnum + "件。",
+                                            //subtext: '',
+                                            x: 'center'
+                                        },
+                                        tooltip: {
+                                            trigger: 'item',
+                                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                        },
+                                        legend: {
+                                            orient: 'vertical',
+                                            left: 'left',
+                                            data: [
+                                                '自行协商:' + data.msg.zxxs,
+                                                '在线处理:' + (data.msg.allnum - data.msg.zxxs)]
+                                        },
+                                        series: [
+                                            {
+                                                name: '',
+                                                type: 'pie',
+                                                radius: '55%',
+                                                center: ['45%', '60%'],
+                                                data: [
+                                                    {
+                                                        value: data.msg.zxxs,
+                                                        name: '自行协商:' + data.msg.zxxs
+                                                    },
+                                                    {
+                                                        value: (data.msg.allnum - data.msg.zxxs),
+                                                        name: '在线处理:' + (data.msg.allnum - data.msg.zxxs)
+                                                    }
+                                                ],
+                                                itemStyle: {
+                                                    emphasis: {
+                                                        shadowBlur: 10,
+                                                        shadowOffsetX: 0,
+                                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    };
+
+                                    var option2 = {
+                                        title: {
+                                            text: '当日在线处理事故：' + (data.msg.allnum - data.msg.zxxs) + "件。",
+                                            //subtext: '',
+                                            x: 'center'
+                                        },
+                                        tooltip: {
+                                            trigger: 'item',
+                                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                        },
+                                        legend: {
+                                            orient: 'vertical',
+                                            left: 'left',
+                                            data: [
+                                                '正在处理:' + data.msg.zzcl,
+                                                '转线下处理:' + data.msg.zxxcl,
+                                                '当事人不在现场:' + data.msg.bzxc,
+                                                '处理完成:' + data.msg.wcnum]
+                                        },
+                                        series: [
+                                            {
+                                                name: '',
+                                                type: 'pie',
+                                                radius: '55%',
+                                                center: ['60%', '60%'],
+                                                data: [
+                                                    {value: data.msg.zzcl, name: '正在处理:' + data.msg.zzcl},
+                                                    {value: data.msg.zxxcl, name: '转线下处理:' + data.msg.zxxcl},
+                                                    {value: data.msg.bzxc, name: '当事人不在现场:' + data.msg.bzxc},
+                                                    {value: data.msg.wcnum, name: '处理完成:' + data.msg.wcnum}
+                                                ],
+                                                itemStyle: {
+                                                    emphasis: {
+                                                        shadowBlur: 10,
+                                                        shadowOffsetX: 0,
+                                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    };
+
+                                    // 使用刚指定的配置项和数据显示图表。
+                                    myChart1.setOption(option1);
+                                    myChart2.setOption(option2);
+
+
+                                    //-----------各中心柱状图统计 Start--------------------------------
+                                    var myChart3 = echarts.init(document.getElementById('main3'));
+                                    var app = {};
+                                    var option3 = null;
+                                    var posList = [
+                                        'left', 'right', 'top', 'bottom',
+                                        'inside',
+                                        'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+                                        'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+                                    ];
+
+                                    app.configParameters = {
+                                        rotate: {
+                                            min: -90,
+                                            max: 90
+                                        },
+                                        align: {
+                                            options: {
+                                                left: 'left',
+                                                center: 'center',
+                                                right: 'right'
+                                            }
+                                        },
+                                        verticalAlign: {
+                                            options: {
+                                                top: 'top',
+                                                middle: 'middle',
+                                                bottom: 'bottom'
+                                            }
+                                        },
+                                        position: {
+                                            options: echarts.util.reduce(posList, function (map, pos) {
+                                                map[pos] = pos;
+                                                return map;
+                                            }, {})
+                                        },
+                                        distance: {
+                                            min: 0,
+                                            max: 100
+                                        }
+                                    };
+
+                                    app.config = {
+                                        rotate: 0,
+                                        align: 'center',
+                                        verticalAlign: 'middle',
+                                        position: 'top',
+                                        distance: 15,
+                                        onChange: function () {
+                                            var labelOption = {
+                                                normal: {
+                                                    rotate: app.config.rotate,
+                                                    align: app.config.align,
+                                                    verticalAlign: app.config.verticalAlign,
+                                                    position: app.config.position,
+                                                    distance: app.config.distance
+                                                }
+                                            };
+                                            myChart3.setOption({
+                                                series: [{
+                                                    label: labelOption
+                                                }, {
+                                                    label: labelOption
+                                                }, {
+                                                    label: labelOption
+                                                }]
+                                            });
+                                        }
+                                    };
+
+
+                                    var labelOption = {
+                                        normal: {
+                                            show: true,
+                                            position: app.config.position,
+                                            distance: app.config.distance,
+                                            align: app.config.align,
+                                            verticalAlign: app.config.verticalAlign,
+                                            rotate: app.config.rotate,
+                                            formatter: '{c}',
+                                            fontSize: 16,
+                                            rich: {
+                                                name: {
+                                                    textBorderColor: '#fff'
+                                                }
+                                            }
+                                        }
+                                    };
+
+                                    var centerItem=new Array();
+                                    var allItem=new Array();
+                                    data.msg.allGroupByCenter.forEach(function(center, i) {
+                                        centerItem.push(center.conductCenter);
+                                        allItem.push(center.countnum);
+                                    })
+                                    var onlineItem=new Array();
+                                    data.msg.onlineGroupByCenter.forEach(function(center, i) {
+                                        onlineItem.push(center.countnum);
+                                    })
+                                    var bythemselvesItem=new Array();
+                                    for (var i=0;i< data.msg.allGroupByCenter.length;i++) {
+                                        bythemselvesItem.push((data.msg.allGroupByCenter[i].countnum)-(data.msg.onlineGroupByCenter[i].countnum));
+                                    }
+
+
+
+
+                                    option3 = {
+                                        title: {
+                                            text: '各中心本日事故处理统计',
+                                            //subtext: '',
+                                            x: 'center'
+                                        },
+                                        color: ['#c23531', '#61a0a8', '#d48265'],
+                                        tooltip: {
+                                            trigger: 'axis',
+                                            axisPointer: {
+                                                type: 'shadow'
+                                            }
+                                        },
+                                        legend: {
+                                            left:'left',
+                                            data: ['总', '自行协商', '在线处理' ]
+                                        },
+                                        toolbox: {
+                                            show: false,
+                                            orient: 'vertical',
+                                            left: 'right',
+                                            top: 'center',
+                                            feature: {
+                                                mark: {show: false},
+                                                dataView: {show: false, readOnly: false},
+                                                magicType: {show: false, type: ['line', 'bar', 'stack', 'tiled']},
+                                                restore: {show: false},
+                                                saveAsImage: {show: false}
+                                            }
+                                        },
+                                        calculable: true,
+                                        xAxis: [
+                                            {
+                                                type: 'category',
+                                                axisTick: {show: false},
+                                                data: centerItem
+                                            }
+                                        ],
+                                        yAxis: [
+                                            {
+                                                type: 'value'
+                                            }
+                                        ],
+                                        series: [
+                                            {
+                                                name: '总',
+                                                type: 'bar',
+                                                barGap: 0,
+                                                label: labelOption,
+                                                data: allItem
+                                            },
+                                            {
+                                                name: '自行协商',
+                                                type: 'bar',
+                                                label: labelOption,
+                                                data: bythemselvesItem
+                                            },
+                                            {
+                                                name: '在线处理',
+                                                type: 'bar',
+                                                label: labelOption,
+                                                data: onlineItem
+                                            }
+                                        ]
+                                    };
+                                    if (option3 && typeof option3 === "object") {
+                                        myChart3.setOption(option3, true);
+                                    }
+                                    //------------各中心柱状图统计 end-----------------------------------
+
+                                } else {
+                                    alert("无数据");
+                                }
+                            }
+                        });
+                    }
+
+                    //日期选择器
+                    $.fn.datepicker.dates['cn'] = {   //切换为中文显示
+                        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+                        daysShort: ["日", "一", "二", "三", "四", "五", "六", "七"],
+                        daysMin: ["日", "一", "二", "三", "四", "五", "六", "七"],
+                        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                        monthsShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                        today: "今天",
+                        clear: "清除"
+                    };
+
+                    $('.selectData').datepicker({
+                        autoclose: true, //自动关闭
+                        beforeShowDay: $.noop,    //在显示日期之前调用的函数
+                        calendarWeeks: false,     //是否显示今年是第几周
+                        clearBtn: false,          //显示清除按钮
+                        daysOfWeekDisabled: [],   //星期几不可选
+                        endDate: Infinity,        //日历结束日期
+                        forceParse: true,         //是否强制转换不符合格式的字符串
+                        format: 'yyyy-mm-dd',     //日期格式
+                        keyboardNavigation: true, //是否显示箭头导航
+                        language: 'cn',           //语言
+                        minViewMode: 0,
+                        orientation: "auto",      //方向
+                        rtl: false,
+                        startDate: -Infinity,     //日历开始日期
+                        startView: 0,             //开始显示
+                        todayBtn: false,          //今天按钮
+                        todayHighlight: false,    //今天高亮
+                        weekStart: 0              //星期几是开始
+                    });
+
+
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

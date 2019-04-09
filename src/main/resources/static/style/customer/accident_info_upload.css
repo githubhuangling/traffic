@@ -1,0 +1,446 @@
+body{
+    background:url("../../image/customer/bg/bg_4.png") no-repeat;
+    background-size:cover;
+}
+.main{
+    margin-left: 220px;
+}
+.time-address .title{
+    margin-right: 15px;
+    font-size: 30px;
+    color: #646491;
+    display:inline-block;
+}
+.title-tips{MARGIN: 0;}
+.time-address ul:after{
+    content:"";
+    display:table;
+    clear:both;
+}
+.time-address li{
+    float:left;
+}
+.time-address select{
+    width: 88px;
+    height:40px;
+    line-height:40px;
+    border-radius:3px;
+    margin-right:10px;
+    padding-left:10px;
+    font-size:20px;
+    color:#6d6d6f;
+    border-color: #D8D8D8;
+    background: url("../../image/customer/icon/pull_down.png") 64px 15px no-repeat;
+    background-color:#fff;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.time-address input{
+    height:40px;
+    padding-left:20px;
+    font-size:20px;
+    line-height:40px;
+    width: 180px;
+    border: 1px solid #D8D8D8;
+    box-sizing:  border-box;
+    border-radius:  4px;
+}
+.ac-time{
+    display: inline-block;
+    margin-right: 40px;
+}
+.ac-time select.species>option{
+    font-family: 'Microsoft YaHei';
+    font-size:30px;
+    font-weight:300;
+}
+/****日历插件样式***/
+#schedule-box{
+    width: 320px;
+    margin: 0 auto;
+    padding: 35px 20px;
+    font-size: 13px;
+}
+.schedule-hd{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+.today{
+    flex: 1;
+    text-align: center;
+}
+.ul-box{
+    overflow: hidden;
+}
+.ul-box > li{
+    float: left;
+    width: 14.28%;
+    text-align: center;
+    padding: 5px 0;
+}
+.other-month{
+    color: #999999;
+}
+.current-month{
+    color: #333333;
+}
+.today-style{
+    border-radius: 50%;
+    background: #58d321;
+}
+.arrow{
+    cursor: pointer;
+}
+.dayStyle{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 35px;
+    cursor: pointer;
+}
+.current-month > .dayStyle:hover{
+    background: #00BDFF;
+    color: #ffffff;
+}
+.today-flag{
+    background: #00C2B1;
+    color: #fff;
+}
+.boxshaw{
+    box-shadow: 2px 2px 15px 2px #e3e3e3;
+}
+.selected-style {
+    background: #00BDFF;
+    color: #ffffff;
+}
+/************以上日历样式***************/
+.ac-date-box{
+    position:relative;
+    margin-right:10px;
+    display:inline-block;
+}
+.ac-date{
+    width: 250px;
+    height:40px;
+    line-height:40px;
+    border:1px solid #bbbbbb;
+    padding-left:20px;
+    border-radius:  3px;
+    font-size: 20px;
+    color: #6d6d6f;
+}
+#schedule-box{
+    background-color:#fff;
+    position:absolute;
+    top:40px;
+    left:0;
+    z-index:999;
+}
+.calendar{
+    position:absolute;
+    top:6px;
+    right:10px;
+    width: 30px;
+    height: 30px;
+    background:url("../../image/customer/icon/date.png") no-repeat;
+}
+.ac-address{
+    display: inline-block;
+}
+.time-address .ac-right{float: right;margin-left: 40px;}
+.ac-address>input{
+    width: 520px;
+    position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.icon-map{
+    vertical-align:  text-bottom;
+    position: relative;
+    left: -40px;
+}
+.weather{
+    position: relative;
+    display:  inline-block;
+}
+.weather>input{
+    width: 156px;
+    text-align:  center;
+    padding-left: 0;
+}
+.weather>img{
+    position: absolute;
+    top:10px;
+    right:30px;
+}
+.weatherImg{
+    position: absolute;
+    width: 804px;
+    right: 0;
+    z-index:111;
+}
+.weatherImg li{
+    float:right;
+}
+.weatherImg .img{
+    width:50px;
+    height:50px;
+    text-align:center;
+    margin: 20px auto 10px;
+}
+.time-address .weatherImg li{
+    width:132px;
+    height: 132px;
+    border: 1px solid #D8D8D8;
+    margin: 0;
+    text-align: center;
+    background-color: #fff;
+    position: relative;
+}
+.ac-upload{
+}
+.ac-upload:before,.ac-upload:after{
+    content:"";
+    display:table;
+    clear:both;
+}
+.ac-img-header{
+    position:relative;
+    width:200px;
+    float:left;
+    margin-right:40px;
+}
+.ac-img-header li,.ac-upload-photos li{
+    display:block;
+    width: 200px;
+    height: 120px;
+    border: 1px solid #D8D8D8;
+    text-align:center;
+    padding: 5px;
+    position:relative;
+    box-sizing: border-box;
+    margin: 0 auto 50px;
+    background-color: #fff;
+}
+.time-address ul li{
+    margin-bottom: 10px;
+}
+.ac-img-header li h3{
+    position:absolute;
+    bottom: -36px;
+    color: #5a94ff;
+    font-size: 22px;
+    left:0;
+    right:0;
+}
+.ac-img-header li .img,.ac-upload-photos li .img{
+    width: 190px;
+    height: 110px;
+    overflow:  hidden;
+}
+.acUpFile{
+    width:190px;
+    height:108px;
+}
+.ac-upload-photos{
+    position:relative;
+    width: 1150px;
+    height: 120px;
+    overflow: hidden;
+    margin-bottom: 50px;
+}
+.ac-upload-photos li{
+    float:left;
+    margin-right: 30px;
+    background-color: #fff;
+}
+.ac-upload-photos li:last-child{
+    margin-right:0;
+}
+.ac-upload-photos li:last-child{
+    margin-right:0;
+}
+.ac-up-file{
+    background: url("../../image/customer/icon/add.png") no-repeat 82px 32px;
+    position:relative;
+    background-color:  #fff;
+}
+.ac-delete{
+    position:absolute;
+    right: 0px;
+    top: 0;
+    padding: 0 8px;
+    background-color:#b6b6b6;
+    color:#fff;
+    font-weight:  bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+.ac-footer{
+    position:absolute;
+    color:#fff;
+    line-height: 40px;
+    bottom: -4px;
+}
+.ac-footer>select{
+    width: 198px;
+    height: 40px;
+    background-color: rgba(0,0,0,0.6);
+    color: #fff;
+    position: relative;
+    bottom: 4px;
+    left: -5px;
+    letter-spacing: 1px;
+    padding-left: 20px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    border:none;
+    font-size:26px;
+    position:relative;
+}
+.ac-footer:before{
+    content: "";
+    width:16px;
+    height:12px;
+    background:url("../../image/customer/icon/pull_down.png") no-repeat;
+    position:absolute;
+    top:10px;
+    z-index:99;
+    right:12px;
+}
+.ac-footer>select>option{
+    text-align:  center;
+}
+.ac-up-file input[type='file']{
+    width: 190px;
+    height: 100px;
+    opacity:0;
+    font-size:0;
+}
+.ac-up-file p{
+    position:absolute;
+    bottom:20px;
+    left: 57px;
+    color: #5A94FF;
+    font-size: 20px;
+}
+.pop-window{
+    width:1330px;
+    height:900px;
+    margin-left:-665px;
+    top:0;
+    margin-top:90px;
+    box-sizing: border-box;
+    padding:20px;
+}
+.map{
+    width:1290px;
+    height:750px;
+    border:1px solid #CACAE1;
+}
+.input-list{
+    width:470px;
+    float:left;
+    margin-top:30px;
+    margin-left:40px;
+    color:#646464;
+}
+.input-list input{
+    height:40px;
+    line-height:40px;
+    font-size:16px;
+    position:relative;
+    width:470px;
+    padding-left:20px;
+    box-sizing: border-box;
+    border:1px solid #CACAE1;
+    border-radius:4px;
+}
+.input-list ul{
+    box-sizing: border-box;
+    width:470px;
+    position:absolute;
+    top: 90px;
+    left: 61px;
+    border:1px solid #CACAE1;
+    border-radius:4px;
+}
+.input-list ul li{
+    height:40px;
+    line-height:40px;
+    padding-left:40px;
+}
+.key-num{
+    float:left;
+    width:720px;
+    height:220px;
+    box-sizing: border-box;
+    margin-top:30px;
+    margin-left:20px;
+    background-color:rgba(0,0,0,0.2);
+    border:1px solid #CACAE1;
+    border-radius:4px;
+    color:#5A94FF;
+    padding:15px;
+}
+.key-num li{
+    text-align: center;
+    width: 53px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color:#fff;
+    margin-right:9px;
+    margin-bottom:10px;
+    height:40px;
+    line-height:40px;
+}
+.key-num>ul>li:last-child{
+    margin-right:0;
+}
+.key-num>ul:last-child{
+    margin-bottom:0;
+}
+.maskImg{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 99;
+    top: 0;
+}
+.map-footer{
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 100px;
+    left: 34%;
+}
+.pop-window>img{
+    height:100%;
+    max-width: 100%;
+}
+.Qr-code{
+    position:fixed;
+    right: 54px;
+    top: 50%;
+    margin-right:40px;
+    color: #4A4A4A;
+    text-align: left;
+    margin-top: -70px;
+}
+.Qr-code p{
+    font-size: 28px;
+    padding-left: 20px;
+}
+.Qr-code .phone-title{
+    font-size: 36px;
+    margin-top:20px;
+}
+.Qr-code img{
+    width: 150px;
+    height: 150px;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang=zh-cmn-Hans>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>管理员登录</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/libs/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/libs/adminLTE/AdminLTE.min.css"/>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo">
+        <b>管理员登录</b>
+    </div>
+    <div class="login-box-body">
+        <form action="/s/sysperson/publicLogin.json" id="form-login" onsubmit="return false;">
+            <div class="form-group has-feedback">
+                <input type="text" id="username" name="empNo" class="form-control" placeholder="账号">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" id="password" name="password" class="form-control" placeholder="密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+
+                <div class="col-xs-4 col-xs-offset-8">
+                    <button onclick="login();" class="btn btn-primary btn-block btn-flat">确定</button>
+                </div>
+            </div>
+        </form>
+        <br>
+    </div>
+</div>
+
+<script src="/libs/jquery/jquery.min.js"></script>
+<script src="/libs/jquery-form/jquery-form.js"></script>
+<script src="/libs/jquery-cookie/jquery.cookie.js"></script>
+<script src="/libs/bootstrap/bootstrap.min.js"></script>
+<script src="/script/manage/date.js"></script>
+<script src="/script/manage/md5.js"></script>
+
+<script type="text/javascript">
+    function login() {
+
+        var empNo = document.getElementById('username').value;
+        var password=$("#password").val(hex_md5(document.getElementById('password').value));
+
+        //检查数据
+        if (empNo == "") {
+            alert("用户名不能为空！");
+            empNo.focus();
+            return false;
+        }
+        if (password == "") {
+            alert("密码不能为空！");
+            password.focus();
+            return false;
+        }
+        $('#form-login').ajaxSubmit({
+            type: 'GET',
+            success: function(data) {
+                if (data.success) {
+                    $.cookie('userId', data.content.userId);
+                    window.location.href = "/manage/sys_index.html";
+                } else {
+                    alert(data.msg);
+
+                }
+            },
+            error: function() {
+                alert('登录错误');
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

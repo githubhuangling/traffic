@@ -1,0 +1,10 @@
+package com.ctf.traffic.repository.sys;
+
+import org.springframework.stereotype.Repository;
+
+import com.ctf.traffic.po.sys.SysDictionary;
+
+@Repository
+public interface SysDictionaryRepository extends BaseRepository<SysDictionary,Long> {
+
+}

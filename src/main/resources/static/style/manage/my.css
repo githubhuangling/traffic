@@ -1,0 +1,31 @@
+.btn.btn-app.btn-app-add{
+	
+	border:1px dashed black;
+	 opacity: 0.2;
+	 margin: 0 0 0 0;
+}
+.dropdown-menu.dropdown-menu-add{
+	position:absolute;
+	top:0;
+	left:100%;
+}
+.btn-group.btn-group-add{
+	margin: 0 0 10px 10px;
+}
+
+/*消除Chrome自动填充 input变黄*/
+input:-webkit-autofill {
+input:-webkit-autofill {
+-webkit-box-shadow: 0 0 0px 1000px white inset;
+border: 1px solid #CCC!important;
+}
+
+.my-radio.radio.personinfo{
+	padding-left:15px;
+	padding-right:15px;
+	border: 1px solid #CCC!important;
+}
+
+
+
+

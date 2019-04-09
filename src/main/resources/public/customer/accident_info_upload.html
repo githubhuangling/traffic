@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>事故信息录入</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css">
+    <link rel="stylesheet" href="../../static/style/customer/accident_information.css">
+    <link rel="stylesheet" href="../../static/style/customer/accident_info_upload.css">
+    <link rel="stylesheet" href="../../static/style/customer/font_calendar.css">
+</head>
+<body>
+<div class="header">
+    <a href="/customer/index"><img src="../../static/image/customer/icon/home.png"></a>
+    事故信息录入
+    <span>事故照片 / 视频上传</span>
+    <div class="Qr-code">
+        <div>
+            <img id="MediaQrcode"/>
+        </div>
+        <div>
+            <p class="phone-title">扫一扫</p>
+            <p>微信上传</p>
+        </div>
+    </div>
+</div>
+<div class="main">
+    <div class="mask hide"></div>
+    <div class="time-address">
+        <ul>
+            <li>
+                <label class="title">事故时间</label>
+                <div class="ac-date-box">
+                    <input type="text" placeholder="请选择日期" id='h3Ele' class="ac-date" />
+                    <span class="calendar"></span>
+                    <div id='schedule-box' class="boxshaw hide"></div>
+                </div>
+                <div  class="ac-time">
+                    <select id="hour" name="hour" class="species">
+                        <option value="0">0时</option>
+                        <option value="1">1时</option>
+                        <option value="2">2时</option>
+                        <option value="3">3时</option>
+                        <option value="4">4时</option>
+                        <option value="5">5时</option>
+                        <option value="6">6时</option>
+                        <option value="7">7时</option>
+                        <option value="8">8时</option>
+                        <option value="9">9时</option>
+                        <option value="10">10时</option>
+                        <option value="11">11时</option>
+                        <option value="12">12时</option>
+                        <option value="13">13时</option>
+                        <option value="14">14时</option>
+                        <option value="15">15时</option>
+                        <option value="16">16时</option>
+                        <option value="17">17时</option>
+                        <option value="18">18时</option>
+                        <option value="19">19时</option>
+                        <option value="20">20时</option>
+                        <option value="21">21时</option>
+                        <option value="22">22时</option>
+                        <option value="23">23时</option>
+                    </select>
+                    <select id="seconds" name="seconds" class="species">
+	                    <option value="0">0分</option>
+	                    <option value="5">5分</option>
+	                    <option value="10">10分</option>
+	                    <option value="15">15分</option>
+	                    <option value="20">20分</option>
+	                    <option value="25">25分</option>
+	                    <option value="30">30分</option>
+	                    <option value="35">35分</option>
+	                    <option value="40">40分</option>
+	                    <option value="45">45分</option>
+	                    <option value="50">50分</option>
+	                    <option value="55">55分</option>
+	                </select>
+                </div>
+            </li>
+            <li>
+                <label class="title">事故地点</label>
+                <div class="ac-address">
+                    <input type="text"  id="trafficAccidentAddress" readonly onfocus="this.blur()" placeholder="请选择事故地点"/>
+                    <img id="addressIcon" class="icon-map" src="../../static/image/customer/icon/map.png" alt="">
+                </div>
+                <div class="ac-right">
+                    <label class="title title-tips">天气</label>
+                    <div class="weather">
+                        <input type="text" id="weather" readonly placeholder="请选择天气"/>
+                        <ul class="weatherImg"></ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="ac-upload">
+        <div class="ac-img-header">
+            <ul>
+                <li>
+                    <div class="img">
+                        <img src="../../static/image/customer/icon/accident_1.png"/>
+                    </div>
+                    <h3>侧前方</h3>
+                </li>
+                <li>
+                    <div class="img">
+                        <img src="../../static/image/customer/icon/accident_0.png"/>
+                    </div>
+                    <h3>侧后方</h3>
+                </li>
+                <li>
+                    <div class="img">
+                        <img src="../../static/image/customer/icon/accident_2.png"/>
+                    </div>
+                    <h3>碰撞部位</h3>
+                </li>
+                <li>
+                    <div class="img">
+                        <img src="../../static/image/customer/icon/accident_other.png"/>
+                    </div>
+                    <h3>其他图片或视频</h3>
+                </li>
+            </ul>
+        </div>
+        <div class="ac-upload-photos must">
+            <ul>
+                <li class="ac-up-file">
+                    <p>上传图片</p>
+                    <input id="mediaPart0" type="file" disabled="disabled"/>
+                </li>
+            </ul>
+        </div>
+        <div class="ac-upload-photos must">
+            <ul>
+                <li class="ac-up-file">
+                    <p>上传图片</p>
+                    <input id="mediaPart1" type="file" disabled="disabled"/>
+                </li>
+            </ul>
+        </div>
+        <div class="ac-upload-photos must">
+            <ul>
+                <li class="ac-up-file">
+                    <p>上传图片</p>
+                    <input id="mediaPart2" type="file" disabled="disabled"/>
+                </li>
+            </ul>
+        </div>
+        <div class="ac-upload-photos other">
+            <ul>
+                <li class="ac-up-file">
+                    <p>上传视频</p>
+                    <input id="mediaPart3" type="file" disabled="disabled"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer">
+        <a class="disable-href">下一步</a>
+<!--        <p style="font-size: 15px;color:red;">每位当事人侧前、侧后、碰撞部位必须至少上传1张照片，</p>
+        <p style="font-size: 15px;color:red;">并在照片下方选择自己的车牌号码。</p>-->
+    </div>
+</div>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/layer/2.1/layer.js"></script>
+<script type="text/javascript" src="../../static/script/customer/common.js"></script>
+<script type="text/javascript" src="../../static/script/customer/accident_info_upload.js"></script>
+<script type="text/javascript" src="../../static/libs/schedule/schedule.js"></script>
+<script type="text/javascript">
+    $.ajax({
+      type:"get",
+      url:"/customer/uploadMediaQrcode?t="+new Date().getTime(),
+      dataType:"json",
+      success:function(data){
+        if(data.result){
+          $('#MediaQrcode').attr('src',data.msg+'&t='+new Date().getTime());
+        }
+      }
+    });
+
+
+    var mySchedule = new Schedule({
+        el: '#schedule-box',
+        //date: '2018-9-20',
+        clickCb: function (y,m,d) {
+            var typeinDate=new Date(y, m-1, d);
+            var nowDate=new Date();
+            var todayEnd=new Date(nowDate.getFullYear(),nowDate.getMonth(),nowDate.getDate()+1);
+            if (typeinDate>=todayEnd) {
+                layer.alert('请选择正确的日期');
+                return false;
+            }
+
+            document.querySelector('#h3Ele').value = y+'-'+m+'-'+d
+        },
+        nextMonthCb: function (y,m,d) {
+            document.querySelector('#h3Ele').value = y+'-'+m+'-'+d
+        },
+        nextYeayCb: function (y,m,d) {
+            document.querySelector('#h3Ele').value = y+'-'+m+'-'+d
+        },
+        prevMonthCb: function (y,m,d) {
+            document.querySelector('#h3Ele').value = y+'-'+m+'-'+d
+        },
+        prevYearCb: function (y,m,d) {
+            document.querySelector('#h3Ele').value = y+'-'+m+'-'+d
+        }
+    });
+</script>
+</body>
+</html>

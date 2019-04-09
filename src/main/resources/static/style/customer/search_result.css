@@ -1,0 +1,121 @@
+main{
+    width:1520px;
+}
+.search-main{
+    padding:30px 112px;
+}
+.search-top-title:after{
+    content:"";
+    display:table;
+    clear:both;
+}
+.search-top-title>div{
+    float:left;
+    margin-right: 90px;
+    font-size: 26px;
+    color: #646491;
+}
+.search-main-dtl{
+    margin-top:20px;
+   border-collapse:collapse;
+   width:1520px;
+}
+.search-main-dtl .search-dtl-title{
+    height:60px;
+}
+table{
+    table-layout: fixed;
+}
+table td,table th{
+    font-weight:normal;
+    line-height:50px;
+}
+table td:nth-child(3),table td:nth-child(4),table th:nth-child(3),table th:nth-child(4){
+    box-sizing: border-box;
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+}
+table td{
+    line-height:40px;
+}
+
+table tr{
+    text-align: left;
+    font-size: 14px;
+    color: #424242;
+    width: 100%;
+}
+table{
+    border-bottom:1px solid #CACAE1;
+}
+table{
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    table-layout: auto;
+    background-color:#fff;
+}
+
+.search-main-dtl tr{
+    border: 1px solid #CACAE1;
+    height: 100px;
+}
+.search-main-dtl td,.search-main-dtl th{
+    text-align:left;
+    /*padding-left: 40px;*/
+    height: 60px;
+    box-sizing:  border-box;
+    font-size:22px;
+    overflow: hidden;
+}
+.search-main-dtl td:first-child,.search-main-dtl th:first-child{
+    padding-left:40px;
+}
+.search-dtl-title{
+    background-color: #EDF5FF;
+}
+.search-ac-time{
+    color: #646491;
+    white-space: normal;
+    width:12%;
+}
+.search-ac-address{
+    color: #B2B2B2;
+    width:28%;
+}
+.search-ac-card-no{
+    color: #5A94FF;
+    width:10%;
+}
+.search-ac-negotiation,.search-ac-org{
+    color: #B2B2B2;
+    width:10%;
+}
+.search-main-dtl .search-ac-preview{
+    width:20%;
+}
+.search-ac-preview a{
+    border: 1px solid #4182FE;
+    width: 90px;
+    height: 40PX;
+    line-height: 40px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-sizing:  border-box;
+    color: #5A94FF;
+    display: inline-block;
+    text-align:  center;
+    margin-right:20px;
+}
+.search-ft{
+    text-align:center;
+    margin:50px auto;
+}
+.main div.footer{
+    width: 1520px;
+    margin: 0;
+    margin-top: 40px;
+}
+.search-ac-preview .hide{
+    display:none;
+}

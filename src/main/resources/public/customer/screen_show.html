@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>大屏展示</title>
+    <link rel="stylesheet" href="../../static/style/customer/common.css">
+    <link rel="stylesheet" href="../../static/style/customer/screen_show.css">
+</head>
+<body>
+<div class="head">
+    <ul class="top-title">
+        <li class="waiting-number">
+            等待人数：
+            <span id="waiting-number">32</span>
+        </li>
+        <li class="processing-seq-2">
+            当前办理：
+            <span id="processing-seq-2">C05</span>
+        </li>
+        <li>
+            即将办理：
+            <span id="toprocess">C04</span>
+        </li>
+    </ul>
+    <div class="details-title">
+        <ul class="title-details">
+            <li class="title">正在办理信息</li>
+            <li>排队号: <span id="processing-seq-1">C05</span></li>
+            <li>号牌号码: <span id="processing-carNumbers">川A00000,川A11111</span></li>
+            <li>当事人: <span id="processing-parts"></span></li>
+        </ul>
+    </div>
+</div>
+<div class="wait-list">
+    <table id="screen-table">
+        <thead>
+        <tr>
+            <th class="wait-no">排队号</th>
+            <th class="car-no">号牌号码</th>
+            <th class="wait-person">当事人</th>
+            <th class="wait-time">事故时间</th>
+            <th class="wait-address">事故地点</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="../../static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/static/script/customer/common.js"></script>
+<script>
+    var page = 1;
+    get();
+    setInterval(function() {
+        page++;
+        // console.log('page' + page);
+        get();
+    }, 300000);
+    function get() {
+        $.ajax({
+            type: "Get",
+            url: "/customer/listPendingAccident?t="+new Date().getTime(),
+            dataType: "json",
+            success: function(data) {
+                if (data.result) {
+                    if ((page * 5 - 5) >= (data.msg.length - 1)) {
+                        page = 1;
+                    }
+                    $('#screen-table tbody').empty();
+                    $('#waiting-number').html(data.msg.length + ' 人');//等待人数
+                    var i = 0;
+                    var toDeal;//即将办理
+                    data.msg.forEach(function(value) {
+                        // TODO-ERROR: 大屏显示事故信息有误
+                        if (value.processStatus == 1) {//正在处理
+                            $('#processing-seq-1').html('C' + value.seqNumber);
+                            $('#processing-seq-2').html('C' + value.seqNumber);
+                            $('#processing-carNumbers').html(value.drivingNumberStr);
+                            $('#processing-parts').html(value.accidentPartyStr);
+                        } else {
+
+                            if (!toDeal) {
+                                toDeal = value;
+                            } else if (toDeal && toDeal.time > value.time) {
+                                toDeal = value;
+                            }
+                            $('#toprocess').html('C' + toDeal.seqNumber);
+
+                            //排队列表
+                            if (i >= (page * 5 - 5) && i < page * 5) {
+                                var tr = "<tr>\n" +
+                                         "                                    <td class=\"wait-no\">C"+value.seqNumber+"</td>\n" +
+                                         "                                    <td class=\"car-no\">"+value.drivingNumberStr+"</td>\n" +
+                                         "                                    <td class=\"wait-person\">"+value.accidentPartyStr+"</td>\n" +
+                                         "                                    <td class=\"wait-time\">"+format(value.time, "yyyy-MM-dd HH:mm")+"</td>\n" +
+                                         "                                    <td class=\"wait-address\">"+value.location+"</td>\n" +
+                                         "                                </tr>";
+                                $('#screen-table tbody').append(tr);
+                            }
+                            i++;
+                        }
+                    });
+
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>
