@@ -2,7 +2,7 @@ package com.ctf.traffic;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-/***
+/***ha
  * 交管系统.
  */
 @SpringBootApplication
