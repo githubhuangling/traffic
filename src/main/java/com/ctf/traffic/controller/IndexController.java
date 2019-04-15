@@ -1,25 +1,17 @@
 package com.ctf.traffic.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.*;
+import java.util.Map.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.apache.catalina.security.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.*;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
-import cn.itsource.weixin.util.SecurityUtil;
-import cn.itsource.weixin.util.XmlPullParserUtil;
 
 @Controller
 @RequestMapping("/index")
